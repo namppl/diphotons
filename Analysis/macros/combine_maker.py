@@ -317,9 +317,12 @@ class CombineApp(TemplatesApp):
                         make_option("--bias-func",dest="bias_func",action="callback",callback=optpars_utils.Load(scratch=True),
                                     type="string",
                                     default={ 
-                                       "ee_dijet_200_2500"      : "((x>550.)*(x<800.)*(0.01)+(x>=800.)*(x<900.)*(0.005)+(x>=900)*0.001)/2.7",
-                                       "mm_dijet_200_2500"      : "((x>550.)*(x<800.)*(0.01)+(x>=800.)*(x<900.)*(0.005)+(x>=900)*0.001)/2.7",
-                                       "allZG_dijet_200_2500"   : "((x>550.)*(x<800.)*(0.01)+(x>=800.)*(x<900.)*(0.005)+(x>=900)*0.001)/2.7",
+                                       "ee_dijet_200_2500"      : "((x>550.)*(x<800.)*0.012 + (x>=800.)*(x<1400.)*42e9*x^(-4.32) + (x>=1400.)*(0.001))/2.7",
+                                       "mm_dijet_200_2500"      : "((x>550.)*(x<800.)*0.012 + (x>=800.)*(x<1400.)*42e9*x^(-4.32) + (x>=1400.)*(0.001))/2.7",
+                                       "allZG_dijet_200_2500"   : "((x>550.)*(x<800.)*0.012 + (x>=800.)*(x<1400.)*42e9*x^(-4.32) + (x>=1400.)*(0.001))/2.7",
+                                       "_ee_dijet_200_2500"      : "((x>550.)*(x<800.)*(0.01)+(x>=800.)*(x<900.)*(0.005)+(x>=900.)*(x<1600.)*0.001+(x>=1600.)*0.0005)/2.7",
+                                       "_mm_dijet_200_2500"      : "((x>550.)*(x<800.)*(0.01)+(x>=800.)*(x<900.)*(0.005)+(x>=900.)*(x<1600.)*0.001+(x>=1600.)*0.0005)/2.7",
+                                       "_allZG_dijet_200_2500"   : "((x>550.)*(x<800.)*(0.01)+(x>=800.)*(x<900.)*(0.005)+(x>=900.)*(x<1600.)*0.001+(x>=1600.)*0.0005)/2.7",
                                        "__ee_dijet_200_2500"      : "(x>550.)*(31.7e9*x^(-4.5))/2.7",
                                        "__mm_dijet_200_2500"      : "(x>550.)*(31.7e9*x^(-4.5))/2.7",
                                        "__allZG_dijet_200_2500"   : "(x>550.)*(31.7e9*x^(-4.5))/2.7",
@@ -1644,6 +1647,11 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         hist = pdf.createHistogram("sigHist",roobs, RooFit.Binning(nBins,mean-4.*sigma,mean+4.*sigma) )
         halfMaxVal = 0.5*hist.GetMaximum()
         maxBin = hist.GetMaximumBin()
+        #print "+++1: "
+        #file_prova = ROOT.TFile.Open("prova.root", "recreate")
+        #hist.Write()
+        #file_prova.Close()
+        #exit(10)
         
         binLeft=binRight=xWidth=xLeft=xRight=0
         
@@ -1727,6 +1735,11 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                     hist = binned.createHistogram("sigHist",roobs)
                     halfMaxVal = 0.5*hist.GetMaximum()
                     maxBin = hist.GetMaximumBin()
+                    #print "+++2: signame: " + signame + " comp: " + comp
+                    #file_prova = ROOT.TFile.Open("prova2.root", "recreate")
+                    #hist.Write()
+                    #file_prova.Close()
+                    #exit(10)
                   
                     binLeft=binRight=xWidth=xLeft=xRight=0
 
@@ -1801,27 +1814,31 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
 
         signals = options.signals_cb.keys()
 
-        fileShapes = ROOT.TFile.Open("signalShapeParameters_w0p014.root")
-        f_mean_all   = fileShapes.Get("f1_mean_all")
-        f_sigma_all  = fileShapes.Get("f1_sigma_all")
-        f_alpha1_all = fileShapes.Get("f1_alpha1_all")
-        f_n1_all     = fileShapes.Get("f1_n1_all")
-        f_alpha2_all = fileShapes.Get("f1_alpha2_all")
-        f_n2_all     = fileShapes.Get("f1_n2_all")
+        fileEff    = ROOT.TFile.Open("signalEfficiency_w"      + options.signal_width + ".root")
+        f1_eff_rel_ee = ROOT.TF1(fileEff.Get("f1_frac_ee"))
 
-        f_mean_ee   = fileShapes.Get("f1_mean_ee")
-        f_sigma_ee  = fileShapes.Get("f1_sigma_ee")
-        f_alpha1_ee = fileShapes.Get("f1_alpha1_ee")
-        f_n1_ee     = fileShapes.Get("f1_n1_ee")
-        f_alpha2_ee = fileShapes.Get("f1_alpha2_ee")
-        f_n2_ee     = fileShapes.Get("f1_n2_ee")
+        fileShapes = ROOT.TFile.Open("signalShapeParameters_w" + options.signal_width + ".root")
 
-        f_mean_mm   = fileShapes.Get("f1_mean_mm")
-        f_sigma_mm  = fileShapes.Get("f1_sigma_mm")
-        f_alpha1_mm = fileShapes.Get("f1_alpha1_mm")
-        f_n1_mm     = fileShapes.Get("f1_n1_mm")
-        f_alpha2_mm = fileShapes.Get("f1_alpha2_mm")
-        f_n2_mm     = fileShapes.Get("f1_n2_mm")
+        f_mean_all   = fileShapes.Get("f1_mean_w"   + options.signal_width + "_all")
+        f_sigma_all  = fileShapes.Get("f1_sigma_w"  + options.signal_width + "_all")
+        f_alpha1_all = fileShapes.Get("f1_alpha1_w" + options.signal_width + "_all")
+        f_n1_all     = fileShapes.Get("f1_n1_w"     + options.signal_width + "_all")
+        f_alpha2_all = fileShapes.Get("f1_alpha2_w" + options.signal_width + "_all")
+        f_n2_all     = fileShapes.Get("f1_n2_w"     + options.signal_width + "_all")
+
+        f_mean_ee    = fileShapes.Get("f1_mean_w"   + options.signal_width + "_ee")
+        f_sigma_ee   = fileShapes.Get("f1_sigma_w"  + options.signal_width + "_ee")
+        f_alpha1_ee  = fileShapes.Get("f1_alpha1_w" + options.signal_width + "_ee")
+        f_n1_ee      = fileShapes.Get("f1_n1_w"     + options.signal_width + "_ee")
+        f_alpha2_ee  = fileShapes.Get("f1_alpha2_w" + options.signal_width + "_ee")
+        f_n2_ee      = fileShapes.Get("f1_n2_w"     + options.signal_width + "_ee")
+
+        f_mean_mm    = fileShapes.Get("f1_mean_w"   + options.signal_width + "_mm")
+        f_sigma_mm   = fileShapes.Get("f1_sigma_w"  + options.signal_width + "_mm")
+        f_alpha1_mm  = fileShapes.Get("f1_alpha1_w" + options.signal_width + "_mm")
+        f_n1_mm      = fileShapes.Get("f1_n1_w"     + options.signal_width + "_mm")
+        f_alpha2_mm  = fileShapes.Get("f1_alpha2_w" + options.signal_width + "_mm")
+        f_n2_mm      = fileShapes.Get("f1_n2_w"     + options.signal_width + "_mm")
 
         for signame in signals:
             self.bookNewWs()
@@ -1935,9 +1952,9 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 if cat == "allZG" : 
                   norm.setVal(1.) 
                 elif cat=="ee":
-                  norm.setVal(0.44) 
+                  norm.setVal(f1_eff_rel_ee.Eval(mass_eval))
                 elif cat=="mm":
-                  norm.setVal(0.56) 
+                  norm.setVal(1.-f1_eff_rel_ee.Eval(mass_eval))
                 #if options.rescale_signal_to:
                 #    norm.setVal(reduced.sumEntries()*self.getSignalScaleFactor(signame))
                 #else:
@@ -2267,6 +2284,11 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                     hist = binned.createHistogram("sigHist",roobs, RooFit.Binning(nBins,mean-4.*sigma,mean+4.*sigma) )
                     halfMaxVal = 0.5*hist.GetMaximum()
                     maxBin = hist.GetMaximumBin()
+                    #print "+++3: signame: " + signame + " comp: " + comp
+                    #file_prova = ROOT.TFile.Open("prova2.root", "recreate")
+                    #hist.Write()
+                    #file_prova.Close()
+                    #exit(10)
                   
                     binLeft=binRight=xWidth=xLeft=xRight=0
 
@@ -3122,7 +3144,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         #styles = [ [(style_utils.colors,ROOT.kYellow)],  [(style_utils.colors,ROOT.kGreen+1)], 
         #           [(style_utils.colors,ROOT.kOrange)]
         #           ]
-        styles = [ [(style_utils.colors,18)],  [(style_utils.colors,ROOT.kWhite)], 
+        styles = [ [(style_utils.colors,17)],  [(style_utils.colors,ROOT.kWhite)], 
                    [(style_utils.colors,ROOT.kOrange)]
                    ]
         for band in bands:
