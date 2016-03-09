@@ -936,6 +936,20 @@ class TemplatesApp(PlotApp):
             self.workspace_input_.Print()
         return rooHistFunc
 
+    ## ------------------------------------------------------------------------------------------------------------
+    def buildRooDataHist(self,name,weight="weight",roovars=None):
+        dset = self.rooData(name,autofill=False)
+        tree = self.treeData(name)
+        
+        if roovars:
+            dset = dset.reduce(roovars)
+        binned = dset.binnedClone()
+        filler = ROOT.DataSetFiller(binned)
+        
+        filler.fillFromTree(tree,weight,True)
+        
+        return binned
+    
 
 
     ## ------------------------------------------------------------------------------------------------------------
