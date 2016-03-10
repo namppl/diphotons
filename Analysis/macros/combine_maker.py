@@ -681,9 +681,25 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                     datacard.write(" -".ljust(15) )
             datacard.write("\n")
 
-            datacard.write(("cms_lep_sf_13TeV_%s  lnN" % cat).ljust(20))
+            datacard.write(("cms_lep_sf_13TeV_mm  lnN").ljust(20))
             for cat in categories:
-                datacard.write(" 1.05".ljust(15) )
+                if cat=="mm":
+                  datacard.write(" 1.05".ljust(15) )
+                else:
+                  datacard.write(" -".ljust(15) )
+                for comp in options.components:
+                    datacard.write(" -".ljust(15) )
+            for cat in sidebands:                
+                for comp in  fit["sidebands"][cat]:                    
+                    datacard.write(" -".ljust(15) )
+            datacard.write("\n")
+
+            datacard.write(("cms_lep_sf_13TeV_ee  lnN").ljust(20))
+            for cat in categories:
+                if cat=="ee":
+                  datacard.write(" 1.05".ljust(15) )
+                else:
+                  datacard.write(" -".ljust(15) )
                 for comp in options.components:
                     datacard.write(" -".ljust(15) )
             for cat in sidebands:                
@@ -721,15 +737,32 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                     datacard.write(" -".ljust(15) )
             datacard.write("\n")
 
-            datacard.write(("cms_hlt_13TeV_%s  lnN" % cat).ljust(20))
+            datacard.write(("cms_trig_13TeV_mm  lnN").ljust(20))
             for cat in categories:
-                datacard.write(" 1.03".ljust(15) )
+                if cat=="mm": 
+                  datacard.write(" 1.02".ljust(15) )
+                else:
+                  datacard.write(" -".ljust(15) )
                 for comp in options.components:
                     datacard.write(" -".ljust(15) )
             for cat in sidebands:                
                 for comp in  fit["sidebands"][cat]:                    
                     datacard.write(" -".ljust(15) )
             datacard.write("\n")
+
+            datacard.write(("cms_trig_13TeV_ee  lnN").ljust(20))
+            for cat in categories:
+                if cat=="ee": 
+                  datacard.write(" 1.03".ljust(15) )
+                else:
+                  datacard.write(" -".ljust(15) )
+                for comp in options.components:
+                    datacard.write(" -".ljust(15) )
+            for cat in sidebands:                
+                for comp in  fit["sidebands"][cat]:                    
+                    datacard.write(" -".ljust(15) )
+            datacard.write("\n")
+
 
             #datacard.write("eff  lnN".ljust(20))
             #for cat in categories:
@@ -1805,6 +1838,9 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         #    signals = options.signals_gauss.keys()
         #else:
         #    signals = options.signals.keys()
+        if not "sig_params" in fit:
+            fit["sig_params"] = {}
+
 
         signals = options.signals_cb.keys()
 
@@ -1837,6 +1873,9 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         for signame in signals:
             self.bookNewWs()
 
+            if not signame in fit["sig_params"]:
+                fit["sig_params"][signame] = []
+
             # In case nothing specified about the output file, set: output_file = signame.root
             if ( options.output_file == None ):
                 options.output_file = "%s.root" % (signame)
@@ -1849,6 +1888,8 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             nameFileOutput = options.output_file
            
             sublist_fwhm = {}
+            allnuis = set()
+ 
             ## build and import signal dataset
             for cat in fit["categories"]:
                 roobs = self.getObservable(cat)
@@ -1897,6 +1938,39 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 alpha2.setConstant(True)
                 n2    .setConstant(True)
 
+                if options.do_energy_scale_uncertainty:
+                    
+                    # break-down in terms of covariance matrix eigenvectors
+                    if len(options.energy_scale_eigenvec) > 0:
+                        variations = {}
+                        for eig,effects in options.energy_scale_eigenvec.iteritems():
+                            print eig, effects, cat
+                            if cat in effects:
+                                variations[eig] = effects[cat]
+                    else:
+                        variations = { cat : 1. }
+
+                    nuis   = ROOT.RooArgList(ROOT.RooFit.RooConst(1.)) ## here we build 1 + Sum nuis*coeff
+                    coeffs = ROOT.RooArgList(ROOT.RooFit.RooConst(1.))
+                    for name,coeff in variations.iteritems():
+                        unc = options.energy_scale_uncertainties.get(name,options.energy_scale_uncertainty)
+                        rooNuis = ROOT.RooRealVar("energyScale%s" % name, "energyScale%s" % name, 0., -5.*unc, 5.*unc )
+                        allnuis.add( (rooNuis.GetName(),0.,unc) )
+                        rooNuis.setConstant(True)
+                        rooCoeff = ROOT.RooFit.RooConst(coeff)
+                        nuis.add(rooNuis)
+                        coeffs.add(rooCoeff)
+                        self.keep( [rooNuis,rooCoeff] )
+                        
+                    sumNuis = ROOT.RooAddition("energyNuis%s" % cat,"energyNuis%s" % cat,nuis,coeffs)
+                    ## nuis.Print()
+                    ## coeffs.Print()
+                    self.keep( [mu,sumNuis] )
+                    mu = ROOT.RooProduct("nuisanced%s" % mu.GetName(),"nuisanced%s" % mu.GetName(),ROOT.RooArgList(mu,sumNuis))
+                    
+                    ## mu.Print()
+                    ## sumNuis.Print()
+        
 
                 
                 ## build RooHistPdf in roobs
@@ -1957,6 +2031,8 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 ## import pdf and normalization
                 self.workspace_.rooImport(pdf,RooFit.RecycleConflictNodes())
                 self.workspace_.rooImport(norm)
+
+            fit["sig_params"][signame] = list(allnuis)
             
             list_fwhm[signame] = sublist_fwhm
             self.saveWs(options)
