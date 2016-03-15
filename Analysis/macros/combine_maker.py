@@ -798,10 +798,10 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             # other nuisance parameters
             datacard.write("\n")
             for param in fit.get("params",[]) + fit.get("sig_params",{}).get(signame,[]):
+                print param
                 if (param[-1] == 0):
                     datacard.write("# ")
                 datacard.write("%s param %1.3g %1.3g\n" % tuple(param) )            
-            
             # flat parameters
             datacard.write("\n")
             for param in fit.get("flat_params",[]):
@@ -1844,6 +1844,9 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
 
         signals = options.signals_cb.keys()
 
+        fileMuSyst = ROOT.TFile.Open("muonSyst.root")
+        f1_muScaleSyst = ROOT.TF1(fileMuSyst.Get("f1_muSyst"))
+
         fileEff    = ROOT.TFile.Open("signalEfficiency_w"      + options.signal_width + ".root")
         f1_eff_rel_ee = ROOT.TF1(fileEff.Get("f1_frac_ee"))
 
@@ -1954,6 +1957,8 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                     coeffs = ROOT.RooArgList(ROOT.RooFit.RooConst(1.))
                     for name,coeff in variations.iteritems():
                         unc = options.energy_scale_uncertainties.get(name,options.energy_scale_uncertainty)
+                        if name=="mu": unc = f1_muScaleSyst.Eval(mass_eval)
+                        if unc<0.01 : unc = 0.01
                         rooNuis = ROOT.RooRealVar("energyScale%s" % name, "energyScale%s" % name, 0., -5.*unc, 5.*unc )
                         allnuis.add( (rooNuis.GetName(),0.,unc) )
                         rooNuis.setConstant(True)
@@ -3081,6 +3086,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         frame.GetXaxis().SetLabelSize( 1.2*frame.GetXaxis().GetLabelSize() )
         frame.GetXaxis().SetTitleSize( 1.2*frame.GetXaxis().GetTitleSize() )
         frame.GetXaxis().SetTitleOffset( 1.15 )
+        #frame.GetYaxis().SetRangeUser(0.03,ymax)
         frame.GetYaxis().SetRangeUser(ymin,ymax)
         frame.GetXaxis().SetMoreLogLabels()
         frame.GetXaxis().SetNoExponent()
@@ -3100,6 +3106,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             legend.SetTextFont(42)
             legend.SetShadowColor(ROOT.kWhite)
             ## legend.AddEntry(None,"%s category" % label.split("_")[-1],"")
+            #legend.AddEntry(hist,"MC","pe")
             legend.AddEntry(hist,"Data","pe")
             legend.AddEntry(fitc,"Fit model","l")
             if doBands:
