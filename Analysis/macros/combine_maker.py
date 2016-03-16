@@ -1958,7 +1958,6 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                     for name,coeff in variations.iteritems():
                         unc = options.energy_scale_uncertainties.get(name,options.energy_scale_uncertainty)
                         if name=="mu": unc = f1_muScaleSyst.Eval(mass_eval)
-                        if unc<0.01 : unc = 0.01
                         rooNuis = ROOT.RooRealVar("energyScale%s" % name, "energyScale%s" % name, 0., -5.*unc, 5.*unc )
                         allnuis.add( (rooNuis.GetName(),0.,unc) )
                         rooNuis.setConstant(True)
