@@ -1,6 +1,6 @@
 {
 	"observables" : { "allZG" : "mass[230,200,2500]", "ee": "mass[230,200,2500]", "mm": "mass[230,200,2500]"  },
-	"plot_binning" : [54,200,1280],
+	"plot_binning" : [60,200,1400],
 	"rootstyle_extra" : [
     		  "TGaxis::SetMaxDigits(3);",
 		  "TH1::SetDefaultSumw2(1);",
@@ -8,7 +8,7 @@
 		 ],
 
 	    "energy_scale_eigenvec" : {
-               "egm ": { "ee"   : 1.0,  "mm" : 0.33333333 },
+               "egm ": { "ee"   : 1.0,  "mm" : 0.5 },
                 "mu" : { "mm"   : 0.6666666666 }
 	    },
 	    
@@ -399,6 +399,6 @@
 
           "__default_model" : "pow",
           "default_model" : "dijet",
-          "--default_model" : "sumexp3",
+          "__default_model" : "sumexp3",
           "__default_model" : "pow3"
 }

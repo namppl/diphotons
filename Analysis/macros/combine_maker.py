@@ -764,26 +764,6 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             datacard.write("\n")
 
 
-            #datacard.write("eff  lnN".ljust(20))
-            #for cat in categories:
-            #    datacard.write(" 1.10".ljust(15) )
-            #    for comp in options.components:
-            #        datacard.write(" -".ljust(15) )
-            #for cat in sidebands:                
-            #    for comp in  fit["sidebands"][cat]:                    
-            #        datacard.write(" -".ljust(15) )
-            #datacard.write("\n")
-
-            #datacard.write("PDFs  lnN".ljust(20))
-            #for cat in categories:
-            #    datacard.write(" 1.06".ljust(15) )
-            #    for comp in options.components:
-            #        datacard.write(" -".ljust(15) )
-            #for cat in sidebands:                
-            #    for comp in  fit["sidebands"][cat]:                    
-            #        datacard.write(" -".ljust(15) )
-            #datacard.write("\n")
-            
             # shape nuiances 
             shapeNuis = fit.get("shape_unc",{}).get(signame,{})
             for nuis,nuisCats in shapeNuis.iteritems():
@@ -3048,7 +3028,8 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         #canv.SetLeftMargin(0.12),canv.SetRightMargin(0.025),canv.SetTopMargin(0.085),canv.SetBottomMargin(0.12)
         canv.cd(1)
         ROOT.gPad.SetPad(0.,0.38,1.,0.95)
-        ROOT.gPad.SetLeftMargin(0.12),ROOT.gPad.SetRightMargin(0.025),ROOT.gPad.SetTopMargin(0.0015),ROOT.gPad.SetBottomMargin(0.02)
+        ROOT.gPad.SetLeftMargin(0.12),ROOT.gPad.SetRightMargin(0.05),ROOT.gPad.SetTopMargin(0.0015),ROOT.gPad.SetBottomMargin(0.02)
+        #ROOT.gPad.SetLeftMargin(0.12),ROOT.gPad.SetRightMargin(0.025),ROOT.gPad.SetTopMargin(0.0015),ROOT.gPad.SetBottomMargin(0.02)
         ROOT.gPad.SetLogy(logy)
         #ROOT.gPad.SetLogx(logx)
         ROOT.gPad.SetFillStyle(0)
@@ -3058,7 +3039,8 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         canv.cd(2)        
         ROOT.gPad.SetPad(0.,0.,1.,0.38)
         ROOT.gPad.SetFillStyle(0)
-        ROOT.gPad.SetLeftMargin(0.12),ROOT.gPad.SetRightMargin(0.025),ROOT.gPad.SetTopMargin(0.0015),ROOT.gPad.SetBottomMargin(0.32)
+        ROOT.gPad.SetLeftMargin(0.12),ROOT.gPad.SetRightMargin(0.05),ROOT.gPad.SetTopMargin(0.0015),ROOT.gPad.SetBottomMargin(0.32)
+        #ROOT.gPad.SetLeftMargin(0.12),ROOT.gPad.SetRightMargin(0.025),ROOT.gPad.SetTopMargin(0.0015),ROOT.gPad.SetBottomMargin(0.32)
         ROOT.gPad.SetFillStyle(0)
         ROOT.gPad.SetTickx()
         # ROOT.gPad.SetTicky()
@@ -3079,7 +3061,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             ymin = max(1.1e-1,ymin)
         
         ### frame.GetXaxis().SetLimits(200,20000)
-        ### frame.GetXaxis().SetRangeUser(200,2000)
+        ###frame.GetXaxis().SetRangeUser(200,1000.1)
         ### resid.GetXaxis().SetLimits(200,2000)
         ### resid.GetXaxis().SetRangeUser(200,2000)
         frame.GetXaxis().SetLabelSize( 1.2*frame.GetXaxis().GetLabelSize() )
@@ -3087,13 +3069,14 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         frame.GetXaxis().SetTitleOffset( 1.15 )
         #frame.GetYaxis().SetRangeUser(0.03,ymax)
         frame.GetYaxis().SetRangeUser(ymin,ymax)
-        frame.GetXaxis().SetMoreLogLabels()
-        frame.GetXaxis().SetNoExponent()
+        #frame.GetXaxis().SetMoreLogLabels()
+        #frame.GetXaxis().SetNoExponent()
         frame.GetYaxis().SetLabelSize( frame.GetXaxis().GetLabelSize() * canv.GetWh() / ROOT.gPad.GetWh() * 1.3 )
         frame.GetYaxis().SetTitleSize( frame.GetXaxis().GetTitleSize() * canv.GetWh() / ROOT.gPad.GetWh() * 1.3 )
         frame.GetYaxis().SetTitleOffset( 0.75 )
-        if not logy:
-            frame.GetYaxis().SetNdivisions(505)
+        frame.GetXaxis().SetNdivisions(1006, False)
+        #if not logy:
+        #    frame.GetYaxis().SetNdivisions(505)
         frame.Draw()
         hist.SetMarkerStyle(20)
         hist.SetMarkerSize(1.)
@@ -3145,7 +3128,8 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         ROOT.gPad.RedrawAxis()
         resid.GetXaxis().SetMoreLogLabels()
         resid.GetXaxis().SetNoExponent()
-        resid.GetXaxis().SetNdivisions(515)
+        #resid.GetXaxis().SetNdivisions(515)
+        resid.GetXaxis().SetNdivisions(1006, False)
         resid.GetYaxis().SetNdivisions(505)
         resid.GetYaxis().CenterTitle()
         resid.GetYaxis().SetTitleSize  ( frame.GetYaxis().GetTitleSize() * 1.4 )
@@ -3176,7 +3160,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         frame.GetXaxis().SetLabelSize(0.)
                 
         canv.cd()
-        label_lumi = ROOT.TPaveText(0.4,0.953,0.99,0.975, "brNDC")
+        label_lumi = ROOT.TPaveText(0.4,0.953,0.975,0.975, "brNDC")
         label_lumi.SetBorderSize(0)
         label_lumi.SetFillColor(ROOT.kWhite)
         label_lumi.SetTextSize(0.038)
@@ -3469,11 +3453,11 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         elif model == "sumexp3":
             
             pname = "sumexp3_%s" % name
-            alpha1 = self.buildRooVar("%s_alpha1" % pname,[-0.005, -1.,   0.], importToWs=False)
-            c1     = self.buildRooVar("%s_c1"     % pname,[   30.,  0., 200.], importToWs=False)
-            alpha2 = self.buildRooVar("%s_alpha2" % pname,[-0.015, -1.,   0.], importToWs=False)
-            c2     = self.buildRooVar("%s_c2"     % pname,[   80.,  0., 200.], importToWs=False)
-            alpha3 = self.buildRooVar("%s_alpha3" % pname,[-0.022, -1.,   0.], importToWs=False)
+            alpha1 = self.buildRooVar("%s_alpha1" % pname,[-0.01, -1.,   0.], importToWs=False)
+            c1     = self.buildRooVar("%s_c1"     % pname,[   1.,  0., 100.], importToWs=False)
+            alpha2 = self.buildRooVar("%s_alpha2" % pname,[-0.01, -1.,   0.], importToWs=False)
+            c2     = self.buildRooVar("%s_c2"     % pname,[   1.,  0., 100.], importToWs=False)
+            alpha3 = self.buildRooVar("%s_alpha3" % pname,[-0.01, -1.,   0.], importToWs=False)
             
             self.pdfPars_.add(alpha1)
             self.pdfPars_.add(c1)
