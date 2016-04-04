@@ -2001,7 +2001,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                     if xWidth>0.:
                         sublist_fwhm[cat] = "%f" % xWidth
                 
-                if cat == "allZG" : 
+                if options.fit_name=="fit_ee" or options.fit_name=="fit_mm" or cat == "allZG" : 
                   norm.setVal(1.) 
                 elif cat=="ee":
                   norm.setVal(f1_eff_rel_ee.Eval(mass_eval))
@@ -3090,7 +3090,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             ## legend.AddEntry(None,"%s category" % label.split("_")[-1],"")
             #legend.AddEntry(hist,"MC","pe")
             legend.AddEntry(hist,"Data","pe")
-            legend.AddEntry(fitc,"Fit model","l")
+            legend.AddEntry(fitc,"Fit","l")
             if doBands:
                 legend.AddEntry(onesigma,"Uncertainty","f")
                 #legend.AddEntry(onesigma,"#pm 1 #sigma","f")
@@ -3165,7 +3165,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         label_lumi.SetFillColor(ROOT.kWhite)
         label_lumi.SetTextSize(0.038)
         label_lumi.SetTextAlign(31)
-        label_lumi.SetTextFont(62)
+        label_lumi.SetTextFont(42)
         label_lumi.AddText( "%s fb^{-1} (13 TeV)" % self.options.luminosity )
         label_lumi.Draw("same")
 
@@ -3174,7 +3174,8 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         label_cms.SetFillColor(ROOT.kWhite)
         label_cms.SetTextSize(0.042)
         label_cms.SetTextAlign(11)
-        label_cms.SetTextFont(61)
+        label_cms.SetTextFont(42)
+        #label_cms.SetTextFont(61)
         label_cms.AddText( "CMS Preliminary" )
         label_cms.Draw("same")
 
