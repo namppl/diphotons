@@ -1829,6 +1829,9 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
 
         fileEff    = ROOT.TFile.Open("signalEfficiency_w"      + options.signal_width + ".root")
         f1_eff_rel_ee = ROOT.TF1(fileEff.Get("f1_frac_ee"))
+        f1_eff_all = ROOT.TF1(fileEff.Get("f1_eff_all"))
+        f1_eff_ee  = ROOT.TF1(fileEff.Get("f1_eff_ee"))
+        f1_eff_mm  = ROOT.TF1(fileEff.Get("f1_eff_mm"))
 
         fileShapes = ROOT.TFile.Open("signalShapeParameters_w" + options.signal_width + ".root")
 
@@ -2001,18 +2004,47 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                     if xWidth>0.:
                         sublist_fwhm[cat] = "%f" % xWidth
                 
-                if options.fit_name=="fit_ee" or options.fit_name=="fit_mm" or cat == "allZG" : 
-                  norm.setVal(1.) 
-                elif cat=="ee":
-                  norm.setVal(f1_eff_rel_ee.Eval(mass_eval))
-                elif cat=="mm":
-                  norm.setVal(1.-f1_eff_rel_ee.Eval(mass_eval))
+                ## this is to get UL in number of events
+                #if options.fit_name=="fit_ee" or options.fit_name=="fit_mm" or cat == "allZG" : 
+                #  norm.setVal(1.) 
+                #elif cat=="ee":
+                #  norm.setVal(f1_eff_rel_ee.Eval(mass_eval))
+                #elif cat=="mm":
+                #  norm.setVal(1.-f1_eff_rel_ee.Eval(mass_eval))
+
+                # this is to get UL in cross section
+                lumi = float(self.options.luminosity)
+                br = 0.03366;
+                #br = 1.;
+                if options.fit_name=="fit_ee" or cat=="ee":
+                  norm.setVal(lumi*f1_eff_ee.Eval(mass_eval)*br)
+                elif options.fit_name=="fit_mm" or cat=="mm":
+                  norm.setVal(lumi*f1_eff_mm.Eval(mass_eval)*br)
+                elif options.fit_name=="fit_v0" or cat=="allZG":
+                  norm.setVal(lumi*f1_eff_all.Eval(mass_eval)*br*2.)
+
+
                 #if options.rescale_signal_to:
                 #    norm.setVal(reduced.sumEntries()*self.getSignalScaleFactor(signame))
                 #else:
                 #    norm.setVal(reduced.sumEntries()) 
                 
                 ## import pdf and normalization
+                #if mass_eval==2000. and options.signal_width=="5p6":
+                #  treeFile = ROOT.TFile.Open("EventYields_v0_eth74X/trees.root")
+                #  tree = treeFile.Get("XZg_Spin0_ZToLL_W_5p6_M_2000")
+                #  boss_mass = ROOT.RooRealVar("boss_mass", "", 1000., 3000.)
+                # # norm = self.buildRooVar("%s_norm" %  (pdf.GetName()), [], importToWs=False ) 
+                #  boss_mass.setBins(100)
+                #  cuts = ""
+                #  if cat=="ee": 
+                #    cuts="leptType==11"
+                #  else :
+                #    cuts="leptType==13"
+                #  dataset = ROOT.RooDataSet("tmpdata", "", tree,  ROOT.RooArgSet(boss_mass), cuts)
+                #  dh = ROOT.RooDataHist(pdf.GetName(),"", ROOT.RooArgSet(boss_mass),dataset) 
+                #  self.workspace_.rooImport(dh,RooFit.RecycleConflictNodes())
+                #else:
                 self.workspace_.rooImport(pdf,RooFit.RecycleConflictNodes())
                 self.workspace_.rooImport(norm)
 
@@ -3176,7 +3208,8 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         label_cms.SetTextAlign(11)
         label_cms.SetTextFont(42)
         #label_cms.SetTextFont(61)
-        label_cms.AddText( "CMS Preliminary" )
+        label_cms.AddText( "CMS" )
+        #label_cms.AddText( "CMS Preliminary" )
         label_cms.Draw("same")
 
 
