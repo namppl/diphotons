@@ -502,11 +502,11 @@ class CombineApp(TemplatesApp):
         if (options.signal_name != None):
             signals = [options.signal_name]
             fname_prefix = None
-        elif len(options.signals_cb)>0:
-            signals = options.signals_cb.keys()
-            fname_prefix = options.signal_root_file.replace(".root","_") if options.signal_root_file else ""
-        elif len(options.signals_gauss)>0:
+        elif options.gaussian_signal and len(options.signals_gauss)>0:
             signals = options.signals_gauss.keys()
+            fname_prefix = options.signal_root_file.replace(".root","_") if options.signal_root_file else ""
+        elif options.doubleCB_signal and len(options.signals_cb)>0:
+            signals = options.signals_cb.keys()
             fname_prefix = options.signal_root_file.replace(".root","_") if options.signal_root_file else ""
         else:
             signals = options.signals.keys()
@@ -775,6 +775,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                         datacard.write(" -".ljust(15) )
                 datacard.write("\n")
                 
+
             # other nuisance parameters
             datacard.write("\n")
             for param in fit.get("params",[]) + fit.get("sig_params",{}).get(signame,[]):
@@ -782,6 +783,8 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 if (param[-1] == 0):
                     datacard.write("# ")
                 datacard.write("%s param %1.3g %1.3g\n" % tuple(param) )            
+
+
             # flat parameters
             datacard.write("\n")
             for param in fit.get("flat_params",[]):
@@ -882,6 +885,8 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             signals = [options.signal_name]
         elif options.signals_cb:
             signals = options.signals_cb.keys()
+        elif options.signals_gauss:
+            signals = options.signals_gauss.keys()
         else:
             signals = options.signals.keys()
             
@@ -968,7 +973,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                             print
                         else:
                             bias_func = ROOT.TF1(bias_name, options.bias_func[bias_name],roobs.getMin(),roobs.getMax())
-                            if options.signals_cb:
+                            if options.signals_cb or options.signals_gauss:
                               mass = float(signame.split("mass")[1])
                             else:  
                               # get value of grav mass
@@ -1642,7 +1647,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         ## sigma  = pdf.sigma(roobs).getVal()
         ## print mean, sigma
         ## if mean == 0.: 
-        if options.signals_cb:
+        if options.signals_cb or options.signals_gauss:
           mean = float(signame.split("mass")[1])
         else:
           mean = self.getMassFromName(signame)
@@ -1941,7 +1946,10 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                     for name,coeff in variations.iteritems():
                         unc = options.energy_scale_uncertainties.get(name,options.energy_scale_uncertainty)
                         if name=="mu": unc = f1_muScaleSyst.Eval(mass_eval)
-                        rooNuis = ROOT.RooRealVar("energyScale%s" % name, "energyScale%s" % name, 0., -5.*unc, 5.*unc )
+                        if name=="egm":
+                          rooNuis = ROOT.RooRealVar("ggH_hzg_mShift_el_8TeV_cat0", "ggH_hzg_mShift_el_8TeV_cat0", 0., -5.*unc, 5.*unc )
+                        else:
+                          rooNuis = ROOT.RooRealVar("energyScale%s" % name, "energyScale%s" % name, 0., -5.*unc, 5.*unc )
                         allnuis.add( (rooNuis.GetName(),0.,unc) )
                         rooNuis.setConstant(True)
                         rooCoeff = ROOT.RooFit.RooConst(coeff)
@@ -2004,6 +2012,14 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                     if xWidth>0.:
                         sublist_fwhm[cat] = "%f" % xWidth
                 
+                ## this is to get UL in number of events
+                #if options.fit_name=="fit_ee" or options.fit_name=="fit_mm" or cat == "allZG" : 
+                #  norm.setVal(1.) 
+                #elif cat=="ee":
+                #  norm.setVal(f1_eff_rel_ee.Eval(mass_eval))
+                #elif cat=="mm":
+                #  norm.setVal(1.-f1_eff_rel_ee.Eval(mass_eval))
+
                 ## this is to get UL in number of events
                 #if options.fit_name=="fit_ee" or options.fit_name=="fit_mm" or cat == "allZG" : 
                 #  norm.setVal(1.) 
@@ -2743,7 +2759,10 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                         ecustom = ROOT.RooCustomizer(pdf,"")
                         obsCat.setVal(MH.getVal())
                             
-                        scaleNuis = ROOT.RooRealVar("energyScale%s" % cat, "energyScale%s" % cat, 0., -5., 5. )
+                        if cat=="egm":
+                          scaleNuis = ROOT.RooRealVar("ggH_hzg_mShift_el_8TeV_cat0", "ggH_hzg_mShift_el_8TeV_cat0", 0., -5., 5. )
+                        else: 
+                          scaleNuis = ROOT.RooRealVar("energyScale%s" % cat, "energyScale%s" % cat, 0., -5., 5. )
                         scaleNuis.setConstant(True)
                         scaleShift =  ROOT.RooProduct("energyScaleShift%s" %cat, "energyScaleShift%s" %cat, ROOT.RooArgList(MH, scaleNuis))
                         shiftObs = ROOT.RooLinearVar("shifted%s%s" % (obsIn.GetName(),cat), "shifted%s%s" % (obsIn.GetName(),cat), obsCat, one, scaleShift )
@@ -2773,6 +2792,8 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                         for nam,val in variations.iteritems():
                             if val == 0: continue
                             nuisName = "energyScale%s" % nam
+                            if nam=="egm":
+                              nuisName = "ggH_hzg_mShift_el_8TeV_cat0"
                             if not nuisName in fit["shape_unc"][signame]:
                                 fit["shape_unc"][signame][nuisName] = { cat : " %1.3g" % fabs(val) }
                             else:
@@ -2999,9 +3020,9 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 hx = hist.GetX()[ip]
                 hy = hist.GetY()[ip]
                 
-                oerrp, oerrm = ronesigma.GetErrorYhigh(ip), ronesigma.GetErrorYhigh(ip)
-                terrp, terrm = rtwosigma.GetErrorYhigh(ip), rtwosigma.GetErrorYhigh(ip)
-                herrp, herrm = hist.GetErrorYhigh(ip), hist.GetErrorYhigh(ip)
+                oerrp, oerrm = ronesigma.GetErrorYhigh(ip), ronesigma.GetErrorYlow(ip)
+                terrp, terrm = rtwosigma.GetErrorYhigh(ip), rtwosigma.GetErrorYlow(ip)
+                herrp, herrm = hist.GetErrorYhigh(ip), hist.GetErrorYlow(ip)
                 ## print oerrp, oerrm, herrp, herrm
                 if blind and ronesigma.GetX()[ip]-ronesigma.GetErrorXlow(ip)>blind[0] and ronesigma.GetX()[ip]+ronesigma.GetErrorXhigh(ip)<blind[1]:
                     ronesigma.SetPoint(ip,ronesigma.GetX()[ip],0.)
@@ -3170,8 +3191,14 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         resid.GetXaxis().SetTitleSize( frame.GetXaxis().GetTitleSize() * 2. )
         resid.GetXaxis().SetTitleOffset( frame.GetXaxis().GetTitleOffset() )
         resid.GetXaxis().SetLabelSize( frame.GetXaxis().GetLabelSize() * 6.5/3.5 )
-        if catname=="ee": resid.SetXTitle("M(e^{+}e^{-}#gamma) [GeV]")
-        if catname=="mm": resid.SetXTitle("M(#mu^{+}#mu^{-}#gamma) [GeV]")
+        if catname=="ee": 
+          xtitle = resid.GetXaxis().GetTitle()
+          newtitle = xtitle.replace("Z", "e^{+}e^{-}")
+          resid.SetXTitle(newtitle)
+        if catname=="mm": 
+          xtitle = resid.GetXaxis().GetTitle()
+          newtitle = xtitle.replace("Z", "#mu^{+}#mu^{-}")
+          resid.SetXTitle(newtitle)
         ## resid.GetYaxis().SetTitle("(data - model) / #sigma_{data}")
         ## resid.GetYaxis().SetTitle("(data-fit)/#sigma_{data}")
         resid.GetYaxis().SetTitle("(data-fit)/#sigma_{stat}")
