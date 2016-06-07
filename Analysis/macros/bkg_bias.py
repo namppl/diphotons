@@ -40,6 +40,9 @@ class BiasApp(CombineApp):
                         make_option("--throw-from-model",dest="throw_from_model",action="store_true",default=False,
                                     help="Throw toys from fit to full dataset",
                                     ),
+                        make_option("--neg-weights-workaround",dest="neg_weights_workaround",action="store_true",default=False,
+                                    help="Build binned datasets to avoid events with negative weights",
+                                    ),
                         make_option("--lumi-factor",dest="lumi_factor",action="store",default=1.,type="float",
                                     help="Luminosity normalization factor",
                                     ),
@@ -88,23 +91,15 @@ class BiasApp(CombineApp):
                                     ),                    
                         make_option("--bias-param",dest="bias_param",action="callback",type="string",callback=optpars_utils.Load(scratch=True),
                                     default={
-                                "ee_dijet_200_2500"      : "((x>550.)*(x<800.)*(0.01)+(x>=800.)*(x<900.)*(0.005)+(x>=900)*0.001)",
-                                "mm_dijet_200_2500"      : "((x>550.)*(x<800.)*(0.01)+(x>=800.)*(x<900.)*(0.005)+(x>=900)*0.001)",
-                                "allZG_dijet_200_2500"   : "((x>550.)*(x<800.)*(0.01)+(x>=800.)*(x<900.)*(0.005)+(x>=900)*0.001)",
-                                "EBEB_dijet_230_7000" : "(x>500.)*((0.06*((x/600.)^-4))+1e-6)",
-                                "EBEE_dijet_320_7000" : "(x>500.)*((0.1*((x/600.)^-5)))",
-                                "EBEB_dijet_300_6000" : "(x>500.)*((0.22*((x/600.)^-5))+1e-6)",
-                                "EBEB_dijet_400_6000" : "(x>500.)*((0.2*((x/600.)^-5))+2e-6)",
-                                "EBEB_dijet_500_6000" : "(x>500.)*((0.18*((x/600.)^-5))+5e-6)",
-                                "EBEE_dijet_300_6000" : "(x>500.)*((0.06*((x/600.)^-4))+1e-7)",
-                                "EBEE_dijet_400_6000" : "(x>500.)*((0.04*((x/600.)^-4))+1e-7)",
-                                "EBEE_dijet_500_6000" : "(x>500.)*((0.04*((x/600.)^-4))+1e-7)",
-                                ### "EBEB_dijet_300_6000" : "(0.110705*((x/600.000000)^-6.04594))+7.28617e-05",
-                                ### "EBEB_dijet_400_6000" : "(0.103261*((x/600.000000)^-6.14835))+7.29511e-05",
-                                ### "EBEB_dijet_500_6000" : "(0.125619*((x/600.000000)^-6.23181))+7.29431e-05",
-                                ### "EBEE_dijet_300_6000" : "(0.0472049*((x/600.000000)^-5.33805))+7.25388e-05",
-                                ### "EBEE_dijet_400_6000" : "(0.0397002*((x/600.000000)^-5.03543))+7.21574e-05",
-                                ### "EBEE_dijet_500_6000" : "(0.0514193*((x/600.000000)^-5.33518))+7.24997e-05",
+                                "ee_dijet_200_3500"      : "(33000.*x^(-2.))",
+                                "mm_dijet_200_3500"      : "(33000.*x^(-2.))",
+                                "allZG_dijet_200_3500"   : "(33000.*x^(-2.))",
+                                "__ee_dijet_200_3500"      : "(5400000.*pow(x,-2.9))",
+                                "__mm_dijet_200_3500"      : "(5400000.*pow(x,-2.9))",
+                                "__allZG_dijet_200_3500"   : "(5400000.*pow(x,-2.9))",
+                                "_ee_dijet_200_2500"      : "((x>550.)*(x<800.)*(0.01)+(x>=800.)*(x<900.)*(0.005)+(x>=900)*0.001)",
+                                "_mm_dijet_200_2500"      : "((x>550.)*(x<800.)*(0.01)+(x>=800.)*(x<900.)*(0.005)+(x>=900)*0.001)",
+                                "_allZG_dijet_200_2500"   : "((x>550.)*(x<800.)*(0.01)+(x>=800.)*(x<900.)*(0.005)+(x>=900)*0.001)",
                                 }
                                     ),                    
                         make_option("--scale-bias",dest="scale_bias",action="store",type="float",
@@ -164,11 +159,15 @@ class BiasApp(CombineApp):
                 treename = "%s%s_%s" % (comp,fitname,cat)
                 
                 print treename
-                dset = self.rooData(treename)
-                dset.Print()
+                if options.neg_weights_workaround:
+                    dset=self.buildRooDataHist(treename,roovars=ROOT.RooArgSet(roobs))
+                else:
+                    dset = self.rooData(treename)
+                    dset.Print()
 
                 reduced = dset.reduce(ROOT.RooArgSet(roobs),"%s > %f && %s < %f" % (roobs.GetName(),roobs.getMin(),roobs.GetName(),roobs.getMax()))
-                binned = reduced.binnedClone()
+                binned = reduced.binnedClone() if not options.neg_weights_workaround else reduced
+
                 
                 if options.throw_from_model:
                     print "Throwing toys from fit to full dataset"
