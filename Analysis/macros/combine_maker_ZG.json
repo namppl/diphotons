@@ -404,6 +404,6 @@
 
           "__default_model" : "pow",
           "default_model" : "dijet",
-          "--default_model" : "sumexp3",
+          "__default_model" : "sumexp3",
           "__default_model" : "pow3"
 }
