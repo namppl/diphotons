@@ -317,18 +317,12 @@ class CombineApp(TemplatesApp):
                         make_option("--bias-func",dest="bias_func",action="callback",callback=optpars_utils.Load(scratch=True),
                                     type="string",
                                     default={ 
-                                       "ee_dijet_200_2500"      : "((x>550.)*(x<800.)*(0.01)+(x>=800.)*(x<900.)*(0.005)+(x>=900)*0.001)/2.7",
-                                       "mm_dijet_200_2500"      : "((x>550.)*(x<800.)*(0.01)+(x>=800.)*(x<900.)*(0.005)+(x>=900)*0.001)/2.7",
-                                       "allZG_dijet_200_2500"   : "((x>550.)*(x<800.)*(0.01)+(x>=800.)*(x<900.)*(0.005)+(x>=900)*0.001)/2.7",
-                                       "__ee_dijet_200_2500"      : "(x>550.)*(31.7e9*x^(-4.5))/2.7",
-                                       "__mm_dijet_200_2500"      : "(x>550.)*(31.7e9*x^(-4.5))/2.7",
-                                       "__allZG_dijet_200_2500"   : "(x>550.)*(31.7e9*x^(-4.5))/2.7",
-                                       "ee_dijet_200_10000"     : "((x>1000.)*(0.001) + (x>600.)*(x<=1000.)*(0.01))/2.7",
-                                       "mm_dijet_200_10000"     : "((x>1000.)*(0.001) + (x>600.)*(x<=1000.)*(0.01))/2.7",
-                                       "allZG_dijet_200_10000"  : "((x>1000.)*(0.001) + (x>600.)*(x<=1000.)*(0.01))/2.7",
-                                       "EBEB_dijet_230_10000" : "((0.06*((x/600.)^-4))+1e-6)/3.",
-                                       "EBEB_8TeV_dijet_300_10000" : "((0.06*((x/600.)^-4))+1e-6)/6.",
-                                       "EBEE_dijet_330_10000" : "((0.1*((x/600.)^-5)))/3.",
+                                       "ee_dijet_200_3500"      : "(33000.*x^(-2.))/10.",
+                                       "mm_dijet_200_3500"      : "(33000.*x^(-2.))/10.",
+                                       "allZG_dijet_200_3500"   : "(33000.*x^(-2.))/10.",
+                                       "__ee_dijet_200_3500"      : "(5400000.*pow(x,-3))/10.",
+                                       "__mm_dijet_200_3500"      : "(5400000.*pow(x,-3))/10.",
+                                       "__allZG_dijet_200_3500"   : "(5400000.*pow(x,-3))/10.",
                                               },
                                     help="Bias as a function of diphoton mass to compute the bias uncertainty values inside the datacard",
                                     ),
@@ -1712,7 +1706,9 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 binned = self.rooData("signal_%s_%s" % (signame,cat)) #ROODATAHIST SIGNAL
                 #signalPdf = ROOT.RooHistPdf("signal_model_%s_%s"% (signame,cat),"signalPdf_%s_%s"% (signame,cat),ROOT.RooArgSet(roobs),signalDataHist)
                 
+                print "signame: " + signame
                 for comp in options.components :
+                    print "comp: " + comp
                     if len(options.fwhm_output_file) != 0:
                         file_fwhm = self.open(options.fwhm_output_file,"a",folder=options.ws_dir)
                     else:
@@ -3371,11 +3367,11 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         elif model == "sumexp3":
             
             pname = "sumexp3_%s" % name
-            alpha1 = self.buildRooVar("%s_alpha1" % pname,[-0.005, -1.,   0.], importToWs=False)
-            c1     = self.buildRooVar("%s_c1"     % pname,[   30.,  0., 200.], importToWs=False)
-            alpha2 = self.buildRooVar("%s_alpha2" % pname,[-0.015, -1.,   0.], importToWs=False)
-            c2     = self.buildRooVar("%s_c2"     % pname,[   80.,  0., 200.], importToWs=False)
-            alpha3 = self.buildRooVar("%s_alpha3" % pname,[-0.022, -1.,   0.], importToWs=False)
+            alpha1 = self.buildRooVar("%s_alpha1" % pname,[-0.01, -1.,   0.], importToWs=False)
+            c1     = self.buildRooVar("%s_c1"     % pname,[   1.,  0., 100.], importToWs=False)
+            alpha2 = self.buildRooVar("%s_alpha2" % pname,[-0.01, -1.,   0.], importToWs=False)
+            c2     = self.buildRooVar("%s_c2"     % pname,[   1.,  0., 100.], importToWs=False)
+            alpha3 = self.buildRooVar("%s_alpha3" % pname,[-0.01, -1.,   0.], importToWs=False)
             
             self.pdfPars_.add(alpha1)
             self.pdfPars_.add(c1)
