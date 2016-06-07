@@ -1,6 +1,6 @@
 {
 	"observables" : { "allZG" : "mass[230,200,2500]", "ee": "mass[230,200,2500]", "mm": "mass[230,200,2500]"  },
-	"plot_binning" : [54,200,1280],
+	"plot_binning" : [60,200,1400],
 	"rootstyle_extra" : [
     		  "TGaxis::SetMaxDigits(3);",
 		  "TH1::SetDefaultSumw2(1);",
@@ -8,8 +8,13 @@
 		 ],
 
 	    "energy_scale_eigenvec" : {
-		"EBEBeig1" : { "EBEB_8TeV" :  0.3006 },
-                "EBEBeig2" : { "EBEB_8TeV" :  0.3996 }
+               "egm ": { "ee"   : 1.0,  "mm" : 0.5 },
+                "mu" : { "mm"   : 0.6666666666 }
+	    },
+	    
+	    "energy_scale_uncertainties" : {
+	    	"egm" : 1e-2,
+	    	"mu"  : 1e-2
 	    },
 	"sqrt" : "13TeV",
 	 "postproc" : {
@@ -31,17 +36,7 @@
              "mass850"  : [  850.0 ],
              "mass900"  : [  900.0 ],
              "mass950"  : [  950.0 ],
-             "mass1000" : [ 1000.0 ],
-             "mass1100" : [ 1100.0 ],
-             "mass1200" : [ 1200.0 ],
-             "mass1300" : [ 1300.0 ],
-             "mass1400" : [ 1400.0 ],
-             "mass1500" : [ 1500.0 ],
-             "mass1600" : [ 1600.0 ],
-             "mass1700" : [ 1700.0 ],
-             "mass1800" : [ 1800.0 ],
-             "mass1900" : [ 1900.0 ],
-             "mass2000" : [ 2000.0 ]
+             "mass1000" : [ 1000.0 ]
        },
 
        "signals_cb" : { 
