@@ -3516,13 +3516,29 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             
             self.keep( [pdf,lina,loga, linb, sqrb] )
 
+        elif model == "sumexp2":
+            
+            pname = "sumexp2_%s" % name
+            alpha1 = self.buildRooVar("%s_alpha1" % pname,[-0.01, -1.,   0.], importToWs=False)
+            c1     = self.buildRooVar("%s_c1"     % pname,[  10.,  0., 100.], importToWs=False)
+            alpha2 = self.buildRooVar("%s_alpha2" % pname,[-0.01, -1.,   0.], importToWs=False)
+            
+            self.pdfPars_.add(alpha1)
+            self.pdfPars_.add(c1)
+            self.pdfPars_.add(alpha2)
+            
+            roolist = ROOT.RooArgList( xvar, alpha1, c1, alpha2 )
+            pdf = ROOT.RooGenericPdf( pname, pname, "exp(@0*@1)+@2*exp(@0*@3)", roolist )
+            
+            self.keep( [pdf,alpha1, c1, alpha2] )
+
         elif model == "sumexp3":
             
             pname = "sumexp3_%s" % name
             alpha1 = self.buildRooVar("%s_alpha1" % pname,[-0.01, -1.,   0.], importToWs=False)
-            c1     = self.buildRooVar("%s_c1"     % pname,[   1.,  0., 100.], importToWs=False)
+            c1     = self.buildRooVar("%s_c1"     % pname,[  10.,  0., 100.], importToWs=False)
             alpha2 = self.buildRooVar("%s_alpha2" % pname,[-0.01, -1.,   0.], importToWs=False)
-            c2     = self.buildRooVar("%s_c2"     % pname,[   1.,  0., 100.], importToWs=False)
+            c2     = self.buildRooVar("%s_c2"     % pname,[ 100.,  0., 200.], importToWs=False)
             alpha3 = self.buildRooVar("%s_alpha3" % pname,[-0.01, -1.,   0.], importToWs=False)
             
             self.pdfPars_.add(alpha1)
