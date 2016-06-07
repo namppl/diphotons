@@ -1,7 +1,7 @@
 ## parallel --ungroup -j 1 './combine_maker.sh full_analysis_spring15_7415v2_sync_v6 --data-file ~/public/workspace/exo/full_analysis_spring15_7415v2_sync_v5_data_ecorr/output.root --lumi 2.4 --fit-name cic2 --plot-fit-bands --rescale-signal-to 1e-3  --parametric-signal ~/eos/cms/store/user/crovelli/WSdiphotonConSmearings/nominalWSwithSmear_k{}_m1000to4900.root --parametric-signal ~/eos/cms/store/user/crovelli/WSdiphotonConSmearings/nominalWSwithSmear_k{}_m500to998.root  --parametric-signal-xsection xsections.json --parametric-signal-acceptance  acceptance_pu.json --load lumi.json  --compute-fwhm --generate-ws-bkgnbias --only-coups {} --label approval --minos-bands' ::: 001 005 007 01 015 02
 
-./combine_maker_ZG.sh EventYields_v0_2016v1 --luminosity 0.589 \
-#./combine_maker_ZG.sh EventYields_v0_10fb --luminosity 10.0 \
+#./combine_maker_ZG.sh EventYields_v0_2016v1 --luminosity 0.589 \
+./combine_maker_ZG.sh EventYields_v0_10fb --luminosity 10.0 \
     --fit-name ${1:-fit_em} \
     --fit-background \
     --load combine_maker_ZG.json \
@@ -25,7 +25,6 @@
     #--mc-data \
     #--label       w5p6 \
     #--signal-width 5p6 \
->>>>>>> 6256141db6ba04ff2191ac633780398f9c866594
     #--gaussian-signal \
     #--no-use-custom-pdfs \
 
