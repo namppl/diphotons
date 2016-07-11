@@ -317,15 +317,15 @@ class CombineApp(TemplatesApp):
                         make_option("--bias-func",dest="bias_func",action="callback",callback=optpars_utils.Load(scratch=True),
                                     type="string",
                                     default={ 
-                                       "ee_dijet_200_3500"      : "(33000.*x^(-2.))/10.",
-                                       "mm_dijet_200_3500"      : "(33000.*x^(-2.))/10.",
-                                       "allZG_dijet_200_3500"   : "(33000.*x^(-2.))/10.",
+                                       "ee_dijet_200_3500"      : "TMath::Min(0.1, 4e9*x^(-4)+0.001)/10.",
+                                       "mm_dijet_200_3500"      : "TMath::Min(0.1, 4e9*x^(-4)+0.001)/10.",
+                                       "allZG_dijet_200_3500"   : "TMath::Min(0.1, 4e9*x^(-4)+0.001)/10.",
+                                       "_ee_dijet_200_3500"      : "(33000.*x^(-2.))/10.",
+                                       "_mm_dijet_200_3500"      : "(33000.*x^(-2.))/10.",
+                                       "_allZG_dijet_200_3500"   : "(33000.*x^(-2.))/10.",
                                        "__ee_dijet_200_2500"      : "(x>600.)*(50000.*x^(-2.5) + 0.0001)/2.7",
                                        "__mm_dijet_200_2500"      : "(x>600.)*(50000.*x^(-2.5) + 0.0001)/2.7",
                                        "__allZG_dijet_200_2500"   : "(x>600.)*(50000.*x^(-2.5) + 0.0001)/2.7",
-                                       "ee_dijet_200_10000"     : "((x>1000.)*(0.001) + (x>600.)*(x<=1000.)*(0.01))/2.7",
-                                       "mm_dijet_200_10000"     : "((x>1000.)*(0.001) + (x>600.)*(x<=1000.)*(0.01))/2.7",
-                                       "allZG_dijet_200_10000"  : "((x>1000.)*(0.001) + (x>600.)*(x<=1000.)*(0.01))/2.7",
                                        "EBEB_dijet_230_10000" : "((0.06*((x/600.)^-4))+1e-6)/3.",
                                        "EBEB_8TeV_dijet_300_10000" : "((0.06*((x/600.)^-4))+1e-6)/6.",
                                        "EBEE_dijet_330_10000" : "((0.1*((x/600.)^-5)))/3.",
@@ -743,7 +743,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             datacard.write(("cms_trig_13TeV_mm  lnN").ljust(20))
             for cat in categories:
                 if cat=="mm": 
-                  datacard.write(" 1.02".ljust(15) )
+                  datacard.write(" 1.04".ljust(15) )
                 else:
                   datacard.write(" -".ljust(15) )
                 for comp in options.components:
@@ -2946,6 +2946,8 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             pdf = ROOT.RooHistPdf("binned_%s"%pdf.GetName(),"binned_%s"%pdf.GetName(),oset,binnedHisto)
             self.keep( [pdf,binnedHisto] )
 
+
+
         if blind:
             plotDset = dset.reduce(RooFit.Cut("%s < %f || %s > %f" % (obs.GetName(),blind[0],obs.GetName(),blind[1]) ))
         else:
@@ -2990,7 +2992,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         if doBands:
             print "Making fit error bands...",
             onesigma,twosigma = self.plotFitBands(options,frame,dset,pdf,obs,fitc,binning,blabel,bias_funcs)
-            pdf.plotOn(frame,*curveopts)
+            #pdf.plotOn(frame, *curveopts)
             dset.plotOn(frame,*dataopts+invisible)
  
             hist2   = frame.getObject(int(frame.numItems()-1))
@@ -3116,6 +3118,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             ymax = ymax * 0.5
             ymin = min(-0.02*ymax,ymin)
         else:
+            #ymin = max(1.1e-4,ymin)
             ymin = max(1.1e-1,ymin)
         
         ### frame.GetXaxis().SetLimits(200,20000)
@@ -3132,12 +3135,13 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         frame.GetYaxis().SetLabelSize( frame.GetXaxis().GetLabelSize() * canv.GetWh() / ROOT.gPad.GetWh() * 1.3 )
         frame.GetYaxis().SetTitleSize( frame.GetXaxis().GetTitleSize() * canv.GetWh() / ROOT.gPad.GetWh() * 1.3 )
         frame.GetYaxis().SetTitleOffset( 0.75 )
-        frame.GetXaxis().SetNdivisions(1006, False)
+        #frame.GetXaxis().SetNdivisions(1006, False)
         #if not logy:
         #    frame.GetYaxis().SetNdivisions(505)
         frame.Draw()
         hist.SetMarkerStyle(20)
         hist.SetMarkerSize(1.)
+        fitc.Draw("same")
         hist.Draw("psame")
         if legend:
             legend.SetFillColor(ROOT.kWhite)
@@ -3172,6 +3176,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         #if catname != "allZG":
         #  pt.Draw("same")
         self.keep(pt)
+
         
         if not logy:
             zero = ROOT.TLine(frame.GetXaxis().GetXmin(),0,frame.GetXaxis().GetXmax(),0)
@@ -3187,7 +3192,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         resid.GetXaxis().SetMoreLogLabels()
         resid.GetXaxis().SetNoExponent()
         #resid.GetXaxis().SetNdivisions(515)
-        resid.GetXaxis().SetNdivisions(1006, False)
+        #resid.GetXaxis().SetNdivisions(1006, False)
         resid.GetYaxis().SetNdivisions(505)
         resid.GetYaxis().CenterTitle()
         resid.GetYaxis().SetTitleSize  ( frame.GetYaxis().GetTitleSize() * 1.4 )
@@ -3222,7 +3227,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 
         frame.GetXaxis().SetTitle("")
         frame.GetXaxis().SetLabelSize(0.)
-                
+        
         canv.cd()
         label_lumi = ROOT.TPaveText(0.4,0.953,0.975,0.975, "brNDC")
         label_lumi.SetBorderSize(0)
@@ -3240,9 +3245,10 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         label_cms.SetTextAlign(11)
         label_cms.SetTextFont(42)
         #label_cms.SetTextFont(61)
-        label_cms.AddText( "CMS" )
-        #label_cms.AddText( "CMS Preliminary" )
+        #label_cms.AddText( "CMS" )
+        label_cms.AddText( "CMS Preliminary" )
         label_cms.Draw("same")
+
 
 
         print 
@@ -3664,6 +3670,28 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             pdf = ROOT.RooGenericPdf( pname, pname, "pow(1+@1*@0+@2*@0*@0,@3)", roolist )
             
             self.keep( [pdf,slo,qua,alp] )
+
+        elif model == "atlas":                
+
+            pname = "atlas_%s" % name
+           # pow1 = self.buildRooVar("%s_p1" % pname,[-3.0,-2.0], importToWs=False)
+           # pow3 = self.buildRooVar("%s_p3" % pname,[0.2,0.4], importToWs=False)
+           # pow2 = self.buildRooVar("%s_p2" % pname,[4.0,10.0], importToWs=False)
+            pow1 = self.buildRooVar("%s_p1" % pname,[-5.0,0.0], importToWs=False)
+            pow3 = self.buildRooVar("%s_p3" % pname,[0.0,1.0], importToWs=False)
+            pow2 = self.buildRooVar("%s_p2" % pname,[0.0,20.0], importToWs=False)
+            pow1.setVal(-2.62)
+            pow3.setVal(0.27)
+            pow2.setVal(8.32)
+            
+            self.pdfPars_.add(pow1)
+            self.pdfPars_.add(pow2)
+            self.pdfPars_.add(pow3)
+            
+            roolist = ROOT.RooArgList( xvar, pow1, pow2,pow3)
+            pdf = ROOT.RooGenericPdf( pname, pname, "TMath::Max(1e-50,pow(@0/13000.,@1)*pow(1-pow(@0/13000.,@3),@2))", roolist )
+            self.keep( [pdf,pow1,pow2,pow3] )
+
 
         if load:
             sname,snap = load
