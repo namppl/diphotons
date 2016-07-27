@@ -676,7 +676,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             # normalization nuisances
             datacard.write("cms_lumi_13TeV  lnN".ljust(20))
             for cat in categories:
-                datacard.write(" 1.027".ljust(15) )
+                datacard.write(" 1.062".ljust(15) )
                 for comp in options.components:
                     datacard.write(" -".ljust(15) )
             for cat in sidebands:                
@@ -1845,13 +1845,6 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
 
         fileShapes = ROOT.TFile.Open("signalShapeParameters_w" + options.signal_width + ".root")
 
-        f_mean_all   = fileShapes.Get("f1_mean_w"   + options.signal_width + "_all")
-        f_sigma_all  = fileShapes.Get("f1_sigma_w"  + options.signal_width + "_all")
-        f_alpha1_all = fileShapes.Get("f1_alpha1_w" + options.signal_width + "_all")
-        f_n1_all     = fileShapes.Get("f1_n1_w"     + options.signal_width + "_all")
-        f_alpha2_all = fileShapes.Get("f1_alpha2_w" + options.signal_width + "_all")
-        f_n2_all     = fileShapes.Get("f1_n2_w"     + options.signal_width + "_all")
-
         f_mean_ee    = fileShapes.Get("f1_mean_w"   + options.signal_width + "_ee")
         f_sigma_ee   = fileShapes.Get("f1_sigma_w"  + options.signal_width + "_ee")
         f_alpha1_ee  = fileShapes.Get("f1_alpha1_w" + options.signal_width + "_ee")
@@ -1897,14 +1890,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 val_n1     = 0.
                 val_alpha2 = 0.
                 val_n2     = 0.
-                if cat=="allZG" :
-                  val_mean   = f_mean_all  .Eval(mass_eval)
-                  val_sigma  = f_sigma_all .Eval(mass_eval)
-                  val_alpha1 = f_alpha1_all.Eval(mass_eval)
-                  val_n1     = f_n1_all    .Eval(mass_eval)
-                  val_alpha2 = f_alpha2_all.Eval(mass_eval)
-                  val_n2     = f_n2_all    .Eval(mass_eval)
-                elif cat=="ee" :
+                if cat=="ee" :
                   val_mean   = f_mean_ee  .Eval(mass_eval)
                   val_sigma  = f_sigma_ee .Eval(mass_eval)
                   val_alpha1 = f_alpha1_ee.Eval(mass_eval)
@@ -2957,7 +2943,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         dset.plotOn(frame,*(dataopts+invisible))
         print "Plotting pdf....",
         pdf.plotOn(frame,*(curveopts+invisible))
-        print "done"        
+
         ## pdf.Print()
         ## dset.Print()
         hist   = frame.getObject(int(frame.numItems()-2))
