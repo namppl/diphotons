@@ -14,11 +14,15 @@
     "#" : "  fromat is <sample-name>:[[input-file][/file-folder]] order irrelevant                                              ",
 	
     "#" : "data to be fit",
-    "__data" : [
+    "data" : [
                "data:__infile__/"
              ],
 
-    "data" : [
+    "_data" : [
+               "zg:__infile__/"
+             ],
+
+    "__data" : [
                "zg:__infile__/",
                "dy:__infile__/"
              ],
