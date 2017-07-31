@@ -253,7 +253,7 @@ class CombineApp(TemplatesApp):
                         make_option("--no-energy-scale-uncertainty",dest="do_energy_scale_uncertainty",action="store_false",
                                     help="Add energy scale uncertainty",
                                     ),
-                        make_option("--energy-scale-uncertainty",dest="energy_scale_uncertainty",action="store",default=1.e-2,type="float",
+                        make_option("--energy-scale-uncertainty",dest="energy_scale_uncertainty",action="store",default=2.5e-2,type="float",
                                     help="Add energy scale uncertainty",
                                     ),
                         make_option("--energy-scale-eigenvec",dest="energy_scale_eigenvec",action="callback",callback=optpars_utils.Load(scratch=True),
@@ -317,18 +317,146 @@ class CombineApp(TemplatesApp):
                         make_option("--bias-func",dest="bias_func",action="callback",callback=optpars_utils.Load(scratch=True),
                                     type="string",
                                     default={ 
-                                       "ee_dijet_200_3500"      : "TMath::Min(0.1, 4e9*x^(-4)+0.001)/10.",
+                                       "ee_dijet_240_4500"      : "TMath::Min(0.1, 4e9*x^(-4)+0.001)/10.",
+                                       "ee_dijet_300_4500"      : "TMath::Min(0.1, 4e9*x^(-4)+0.001)/10.",
+                                       "mm_dijet_200_4500"      : "TMath::Min(0.1, 4e9*x^(-4)+0.001)/10.",
+                                       "mm_dijet_240_4500"      : "TMath::Min(0.1, 4e9*x^(-4)+0.001)/10.",
+                                       "mm_dijet_250_4500"      : "TMath::Min(0.1, 4e9*x^(-4)+0.001)/10.",
+                                       "mm_dijet_300_4500"      : "TMath::Min(0.1, 4e9*x^(-4)+0.001)/10.",
+                                       "em_dijet_300_4500"   : "TMath::Min(0.1, 4e9*x^(-4)+0.001)/10.",
+                                       "allZG_dijet_300_4500"   : "TMath::Min(0.1, 4e9*x^(-4)+0.001)/10.",
+                                       "_ee_dijet_240_4500"      : "TMath::Min(0.1, 4e9*x^(-4)+0.001)/10.",
+                                       "_ee_dijet_300_4500"      : "TMath::Min(0.1, 4e9*x^(-4)+0.001)/10.",
+                                       "_mm_dijet_200_4500"      : "TMath::Min(0.1, 4e9*x^(-4)+0.001)/10.",
+                                       "_mm_dijet_240_4500"      : "TMath::Min(0.1, 4e9*x^(-4)+0.001)/10.",
+                                       "_mm_dijet_250_4500"      : "TMath::Min(0.1, 4e9*x^(-4)+0.001)/10.",
+                                       "_mm_dijet_300_4500"      : "TMath::Min(0.1, 4e9*x^(-4)+0.001)/10.",
+                                       "_em_dijet_300_4500"   : "TMath::Min(0.1, 4e9*x^(-4)+0.001)/10.",
+                                       "_allZG_dijet_300_4500"   : "TMath::Min(0.1, 4e9*x^(-4)+0.001)/10.",
+                                       "ee_dijet_240_3500"      : "TMath::Min(0.1, 4e9*x^(-4)+0.001)/10.",
+                                       "ee_dijet_300_3500"      : "TMath::Min(0.1, 4e9*x^(-4)+0.001)/10.",
                                        "mm_dijet_200_3500"      : "TMath::Min(0.1, 4e9*x^(-4)+0.001)/10.",
-                                       "allZG_dijet_200_3500"   : "TMath::Min(0.1, 4e9*x^(-4)+0.001)/10.",
-                                       "_ee_dijet_200_3500"      : "(33000.*x^(-2.))/10.",
-                                       "_mm_dijet_200_3500"      : "(33000.*x^(-2.))/10.",
-                                       "_allZG_dijet_200_3500"   : "(33000.*x^(-2.))/10.",
-                                       "__ee_dijet_200_2500"      : "(x>600.)*(50000.*x^(-2.5) + 0.0001)/2.7",
-                                       "__mm_dijet_200_2500"      : "(x>600.)*(50000.*x^(-2.5) + 0.0001)/2.7",
-                                       "__allZG_dijet_200_2500"   : "(x>600.)*(50000.*x^(-2.5) + 0.0001)/2.7",
-                                       "EBEB_dijet_230_10000" : "((0.06*((x/600.)^-4))+1e-6)/3.",
-                                       "EBEB_8TeV_dijet_300_10000" : "((0.06*((x/600.)^-4))+1e-6)/6.",
-                                       "EBEE_dijet_330_10000" : "((0.1*((x/600.)^-5)))/3.",
+                                       "mm_dijet_240_3500"      : "TMath::Min(0.1, 4e9*x^(-4)+0.001)/10.",
+                                       "mm_dijet_300_3500"      : "TMath::Min(0.1, 4e9*x^(-4)+0.001)/10.",
+                                       "em_dijet_300_3500"   : "TMath::Min(0.1, 4e9*x^(-4)+0.001)/10.",
+                                       "allZG_dijet_300_3500"   : "TMath::Min(0.1, 4e9*x^(-4)+0.001)/10.",
+                                       "_ee_dijet_240_3500"      : "TMath::Min(0.1, 4e9*x^(-4)+0.001)/10.",
+                                       "_ee_dijet_300_3500"      : "TMath::Min(0.1, 4e9*x^(-4)+0.001)/10.",
+                                       "_mm_dijet_200_3500"      : "TMath::Min(0.1, 4e9*x^(-4)+0.001)/10.",
+                                       "_mm_dijet_240_3500"      : "TMath::Min(0.1, 4e9*x^(-4)+0.001)/10.",
+                                       "_mm_dijet_300_3500"      : "TMath::Min(0.1, 4e9*x^(-4)+0.001)/10.",
+                                       "_em_dijet_300_3500"   : "TMath::Min(0.1, 4e9*x^(-4)+0.001)/10.",
+                                       "_allZG_dijet_300_3500"   : "TMath::Min(0.1, 4e9*x^(-4)+0.001)/10."
+                                       
+                                       # "ee_dijet_240_4500"      : "TMath::Min(0.27,(16e9*x^(-4)+0.0002))/35.9",
+                                       # "ee_dijet_300_4500"      : "TMath::Min(0.27,(16e9*x^(-4)+0.0002))/35.9",
+                                       # "mm_dijet_200_4500"      : "TMath::Min(0.27,(16e9*x^(-4)+0.0002))/35.9",
+                                       # "mm_dijet_240_4500"      : "TMath::Min(0.27,(16e9*x^(-4)+0.0002))/35.9",
+                                       # "mm_dijet_250_4500"      : "TMath::Min(0.27,(16e9*x^(-4)+0.0002))/35.9",
+                                       # "mm_dijet_300_4500"      : "TMath::Min(0.27,(16e9*x^(-4)+0.0002))/35.9",
+                                       # "em_dijet_300_4500"   : "TMath::Min(0.27,(16e9*x^(-4)+0.0002))/35.9",
+                                       # "allZG_dijet_300_4500"   : "TMath::Min(0.27,(16e9*x^(-4)+0.0002))/35.9",
+                                       # "_ee_dijet_240_4500"      : "TMath::Min(0.27,(16e9*x^(-4)+0.0002))/35.9",
+                                       # "_ee_dijet_300_4500"      : "TMath::Min(0.27,(16e9*x^(-4)+0.0002))/35.9",
+                                       # "_mm_dijet_200_4500"      : "TMath::Min(0.27,(16e9*x^(-4)+0.0002))/35.9",
+                                       # "_mm_dijet_240_4500"      : "TMath::Min(0.27,(16e9*x^(-4)+0.0002))/35.9",
+                                       # "_mm_dijet_250_4500"      : "TMath::Min(0.27,(16e9*x^(-4)+0.0002))/35.9",
+                                       # "_mm_dijet_300_4500"      : "TMath::Min(0.27,(16e9*x^(-4)+0.0002))/35.9",
+                                       # "_em_dijet_300_4500"   : "TMath::Min(0.27,(16e9*x^(-4)+0.0002))/35.9",
+                                       # "_allZG_dijet_300_4500"   : "TMath::Min(0.27,(16e9*x^(-4)+0.0002))/35.9",
+                                       # "ee_dijet_240_3500"      : "TMath::Min(0.27,(16e9*x^(-4)+0.0002))/35.9",
+                                       # "ee_dijet_300_3500"      : "TMath::Min(0.27,(16e9*x^(-4)+0.0002))/35.9",
+                                       # "mm_dijet_200_3500"      : "TMath::Min(0.27,(16e9*x^(-4)+0.0002))/35.9",
+                                       # "mm_dijet_240_3500"      : "TMath::Min(0.27,(16e9*x^(-4)+0.0002))/35.9",
+                                       # "mm_dijet_300_3500"      : "TMath::Min(0.27,(16e9*x^(-4)+0.0002))/35.9",
+                                       # "em_dijet_300_3500"   : "TMath::Min(0.27,(16e9*x^(-4)+0.0002))/35.9",
+                                       # "allZG_dijet_300_3500"   : "TMath::Min(0.27,(16e9*x^(-4)+0.0002))/35.9",
+                                       # "_ee_dijet_240_3500"      : "TMath::Min(0.27,(16e9*x^(-4)+0.0002))/35.9",
+                                       # "_ee_dijet_300_3500"      : "TMath::Min(0.27,(16e9*x^(-4)+0.0002))/35.9",
+                                       # "_mm_dijet_200_3500"      : "TMath::Min(0.27,(16e9*x^(-4)+0.0002))/35.9",
+                                       # "_mm_dijet_240_3500"      : "TMath::Min(0.27,(16e9*x^(-4)+0.0002))/35.9",
+                                       # "_mm_dijet_300_3500"      : "TMath::Min(0.27,(16e9*x^(-4)+0.0002))/35.9",
+                                       # "_em_dijet_300_3500"   : "TMath::Min(0.27,(16e9*x^(-4)+0.0002))/35.9",
+                                       # "_allZG_dijet_300_3500"   : "TMath::Min(0.27,(16e9*x^(-4)+0.0002))/35.9"
+                                       
+                                       # "ee_dijet_240_4500"      : "TMath::Min(1.5, 20e9*x^(-4)+0.0005)/35.9",
+                                       # "ee_dijet_300_4500"      : "TMath::Min(1.5, 20e9*x^(-4)+0.0005)/35.9",
+                                       # "mm_dijet_200_4500"      : "TMath::Min(1.5, 20e9*x^(-4)+0.0005)/35.9",
+                                       # "mm_dijet_240_4500"      : "TMath::Min(1.5, 20e9*x^(-4)+0.0005)/35.9",
+                                       # "mm_dijet_250_4500"      : "TMath::Min(1.5, 20e9*x^(-4)+0.0005)/35.9",
+                                       # "mm_dijet_300_4500"      : "TMath::Min(1.5, 20e9*x^(-4)+0.0005)/35.9",
+                                       # "em_dijet_300_4500"   : "TMath::Min(1.5, 20e9*x^(-4)+0.0005)/35.9",
+                                       # "allZG_dijet_300_4500"   : "TMath::Min(1.5, 20e9*x^(-4)+0.0005)/35.9",
+                                       # "_ee_dijet_240_4500"      : "TMath::Min(1.5, 20e9*x^(-4)+0.0005)/35.9",
+                                       # "_ee_dijet_300_4500"      : "TMath::Min(1.5, 20e9*x^(-4)+0.0005)/35.9",
+                                       # "_mm_dijet_200_4500"      : "TMath::Min(1.5, 20e9*x^(-4)+0.0005)/35.9",
+                                       # "_mm_dijet_240_4500"      : "TMath::Min(1.5, 20e9*x^(-4)+0.0005)/35.9",
+                                       # "_mm_dijet_250_4500"      : "TMath::Min(1.5, 20e9*x^(-4)+0.0005)/35.9",
+                                       # "_mm_dijet_300_4500"      : "TMath::Min(1.5, 20e9*x^(-4)+0.0005)/35.9",
+                                       # "_em_dijet_300_4500"   : "TMath::Min(1.5, 20e9*x^(-4)+0.0005)/35.9",
+                                       # "_allZG_dijet_300_4500"   : "TMath::Min(1.5, 20e9*x^(-4)+0.0005)/35.9",
+                                       # "ee_dijet_240_3500"      : "TMath::Min(1.5, 20e9*x^(-4)+0.0005)/35.9",
+                                       # "ee_dijet_300_3500"      : "TMath::Min(1.5, 20e9*x^(-4)+0.0005)/35.9",
+                                       # "mm_dijet_200_3500"      : "TMath::Min(1.5, 20e9*x^(-4)+0.0005)/35.9",
+                                       # "mm_dijet_240_3500"      : "TMath::Min(1.5, 20e9*x^(-4)+0.0005)/35.9",
+                                       # "mm_dijet_300_3500"      : "TMath::Min(1.5, 20e9*x^(-4)+0.0005)/35.9",
+                                       # "em_dijet_300_3500"   : "TMath::Min(1.5, 20e9*x^(-4)+0.0005)/35.9",
+                                       # "allZG_dijet_300_3500"   : "TMath::Min(1.5, 20e9*x^(-4)+0.0005)/35.9",
+                                       # "_ee_dijet_240_3500"      : "TMath::Min(1.5, 20e9*x^(-4)+0.0005)/35.9",
+                                       # "_ee_dijet_300_3500"      : "TMath::Min(1.5, 20e9*x^(-4)+0.0005)/35.9",
+                                       # "_mm_dijet_200_3500"      : "TMath::Min(1.5, 20e9*x^(-4)+0.0005)/35.9",
+                                       # "_mm_dijet_240_3500"      : "TMath::Min(1.5, 20e9*x^(-4)+0.0005)/35.9",
+                                       # "_mm_dijet_300_3500"      : "TMath::Min(1.5, 20e9*x^(-4)+0.0005)/35.9",
+                                       # "_em_dijet_300_3500"   : "TMath::Min(1.5, 20e9*x^(-4)+0.0005)/35.9",
+                                       # "_allZG_dijet_300_3500"   : "TMath::Min(1.5, 20e9*x^(-4)+0.0005)/35.9"
+
+                                       # "ee_dijet_240_3500"      : "TMath::Min(0.54, 15.1e9*x^(-4)+0.002)*2/35.9",
+                                       # "mm_dijet_200_3500"      : "TMath::Min(0.54, 15.1e9*x^(-4)+0.002)*2/35.9",
+                                       # "em_dijet_200_3500"   : "TMath::Min(0.54, 15.1e9*x^(-4)+0.002)*2/35.9",
+                                       # "allZG_dijet_200_3500"   : "TMath::Min(0.54, 15.1e9*x^(-4)+0.002)*2/35.9",
+                                       # "_ee_dijet_240_3500"      : "TMath::Min(0.54, 15.1e9*x^(-4)+0.002)*2/35.9",
+                                       # "_mm_dijet_200_3500"      : "TMath::Min(0.54, 15.1e9*x^(-4)+0.002)*2/35.9",
+                                       # "_em_dijet_200_3500"   : "TMath::Min(0.54, 15.1e9*x^(-4)+0.002)*2/35.9",
+                                       # "_allZG_dijet_200_3500"   : "TMath::Min(0.54, 15.1e9*x^(-4)+0.002)*2/35.9",
+                                       # "ee_dijet_240_3500"      : "TMath::Min(0.54, 15.1e9*x^(-4)+0.002)/35.9",
+                                       # "mm_dijet_200_3500"      : "TMath::Min(0.54, 15.1e9*x^(-4)+0.002)/35.9",
+                                       # "em_dijet_200_3500"   : "TMath::Min(0.54, 15.1e9*x^(-4)+0.002)/35.9",
+                                       # "allZG_dijet_200_3500"   : "TMath::Min(0.54, 15.1e9*x^(-4)+0.002)/35.9",
+                                       # "_ee_dijet_240_3500"      : "TMath::Min(0.54, 15.1e9*x^(-4)+0.002)/35.9",
+                                       # "_mm_dijet_200_3500"      : "TMath::Min(0.54, 15.1e9*x^(-4)+0.002)/35.9",
+                                       # "_em_dijet_200_3500"   : "TMath::Min(0.54, 15.1e9*x^(-4)+0.002)/35.9",
+                                       # "_allZG_dijet_200_3500"   : "TMath::Min(0.54, 15.1e9*x^(-4)+0.002)/35.9",
+                                       # "ee_dijet_240_3500"      : "TMath::Min(0.15, 5.3e9*x^(-4)+0.00055)*5.05/36.8",
+                                       # "mm_dijet_200_3500"      : "TMath::Min(0.15, 5.3e9*x^(-4)+0.00055)*5.05/36.8",
+                                       # "em_dijet_200_3500"   : "TMath::Min(0.15, 5.3e9*x^(-4)+0.00055)*5.05/36.8",
+                                       # "allZG_dijet_200_3500"   : "TMath::Min(0.15, 5.3e9*x^(-4)+0.00055)*5.05/36.8",
+                                       # "_ee_dijet_240_3500"      : "TMath::Min(0.15, 5.3e9*x^(-4)+0.00055)*5.05/36.8",
+                                       # "_mm_dijet_200_3500"      : "TMath::Min(0.15, 5.3e9*x^(-4)+0.00055)*5.05/36.8",
+                                       # "_em_dijet_200_3500"   : "TMath::Min(0.15, 5.3e9*x^(-4)+0.00055)*5.05/36.8",
+                                       # "_allZG_dijet_200_3500"   : "TMath::Min(0.15, 5.3e9*x^(-4)+0.00055)*5.05/36.8",
+                                       # "ee_dijet_200_3500"      : "TMath::Min(0.12, 4.5e9*x^(-4)+0.001)*5/36.5",
+                                       # "mm_dijet_200_3500"      : "TMath::Min(0.12, 4.5e9*x^(-4)+0.001)*5/36.5",
+                                       # "em_dijet_200_3500"   : "TMath::Min(0.12, 4.5e9*x^(-4)+0.001)*5/36.5",
+                                       # "allZG_dijet_200_3500"   : "TMath::Min(0.12, 4.5e9*x^(-4)+0.001)*5/36.5",
+                                       # "_ee_dijet_200_3500"      : "TMath::Min(0.12, 4.5e9*x^(-4)+0.001)*5/36.5",
+                                       # "_mm_dijet_200_3500"      : "TMath::Min(0.12, 4.5e9*x^(-4)+0.001)*5/36.5",
+                                       # "_em_dijet_200_3500"   : "TMath::Min(0.12, 4.5e9*x^(-4)+0.001)*5/36.5",
+                                       # "_allZG_dijet_200_3500"   : "TMath::Min(0.12, 4.5e9*x^(-4)+0.001)*5/36.5",
+                                       # "ee_dijet_200_3500"      : "TMath::Min(0.7, 9e9*x^(-4)+0.002)/36.5",
+                                       # "mm_dijet_200_3500"      : "TMath::Min(1.05, 22e9*x^(-4)+0.002)/36.5",
+                                       # "em_dijet_200_3500"   : "TMath::Min(0.1, 4e9*x^(-4)+0.001)/36.5",
+                                       # "allZG_dijet_200_3500"   : "TMath::Min(0.1, 4e9*x^(-4)+0.001)/36.5",
+                                       # "_ee_dijet_200_3500"      : "TMath::Min(0.7, 9e9*x^(-4)+0.002)/36.5",
+                                       # "_mm_dijet_200_3500"      : "TMath::Min(1.05, 22e9*x^(-4)+0.002)/36.5",
+                                       # "_em_dijet_200_3500"   : "TMath::Min(0.1, 4e9*x^(-4)+0.001)/36.5",
+                                       # "_allZG_dijet_200_3500"   : "TMath::Min(0.1, 4e9*x^(-4)+0.001)/36.5",
+                                       # "__ee_dijet_200_2500"      : "(x>600.)*(50000.*x^(-2.5) + 0.0001)/2.7",
+                                       # "__mm_dijet_200_2500"      : "(x>600.)*(50000.*x^(-2.5) + 0.0001)/2.7",
+                                       # "__em_dijet_200_2500"   : "(x>600.)*(50000.*x^(-2.5) + 0.0001)/2.7",
+                                       # "__allZG_dijet_200_2500"   : "(x>600.)*(50000.*x^(-2.5) + 0.0001)/2.7",
+                                       # "EBEB_dijet_230_10000" : "((0.06*((x/600.)^-4))+1e-6)/3.",
+                                       # "EBEB_8TeV_dijet_300_10000" : "((0.06*((x/600.)^-4))+1e-6)/6.",
+                                       # "EBEE_dijet_330_10000" : "((0.1*((x/600.)^-5)))/3.",
                                               },
                                     help="Bias as a function of diphoton mass to compute the bias uncertainty values inside the datacard",
                                     ),
@@ -566,38 +694,38 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             hasShapeUnc = len(fit.get("shape_unc",{}).get(signame,{}).keys())>0
             
             for cat in categories:
-                datacard.write("shapes sig".ljust(20))
+                datacard.write("shapes sig2016".ljust(20))
                 datacard.write((" %s  %s" % (cat,options.signal_root_file)).ljust(50))
                 if options.use_signal_datahist:
                     datacard.write(" wtemplates:signal_%s_%s"% (signame,cat))
                     if hasShapeUnc: datacard.write(" wtemplates:signal_%s_%s_$SYSTEMATIC"% (signame,cat))                        
                 else:
-                    datacard.write(" wtemplates:model_signal_%s_%s"% (signame,cat))
-                    if hasShapeUnc: datacard.write(" wtemplates:model_signal_%s_%s_$SYSTEMATIC"% (signame,cat))
+                    datacard.write(" wtemplates:model_signal_%s_%s2016"% (signame,cat))
+                    if hasShapeUnc: datacard.write(" wtemplates:model_signal_%s_%s2016_$SYSTEMATIC"% (signame,cat))
                 datacard.write("\n")
 
                 for comp in options.components:
                     datacard.write(("shapes %s" % comp).ljust(20))
                     datacard.write((" %s  %s" % (cat,bkgfile)).ljust(50))
-                    datacard.write(" wtemplates:model_%s_%s\n" % (comp,cat) ) 
+                    datacard.write(" wtemplates:model_%s_%s2016\n" % (comp,cat) ) 
                 datacard.write("shapes data_obs".ljust(20))
                 datacard.write((" %s  %s" % (cat,bkgfile)).ljust(50))
                 if options.binned_data_in_datacard:
-                    datacard.write(" wtemplates:binned_data_%s\n" % cat) 
+                    datacard.write(" wtemplates:binned_data2016_%s\n" % cat) 
                 else:
-                    datacard.write(" wtemplates:data_%s\n" % cat) 
+                    datacard.write(" wtemplates:data2016_%s\n" % cat) 
             
             for cat in sidebands:                
                 for comp in  fit["sidebands"][cat]:
                     datacard.write(("shapes %s" % comp).ljust(20))
                     datacard.write((" %s  %s" % (cat,bkgfile)).ljust(50))
-                    datacard.write(" wtemplates:model_%s_%s\n" % (comp,cat) )  
+                    datacard.write(" wtemplates:model_%s_%s2016\n" % (comp,cat) )  
                 datacard.write("shapes data_obs".ljust(20))
                 datacard.write((" %s  %s" % (cat,bkgfile)).ljust(50))
                 if options.binned_data_in_datacard:
-                    datacard.write(" wtemplates:binned_data_%s\n" % cat)                 
+                    datacard.write(" wtemplates:binned_data2016_%s\n" % cat)                 
                 else:
-                    datacard.write(" wtemplates:data_%s\n" % cat)                 
+                    datacard.write(" wtemplates:data2016_%s\n" % cat)                 
 
             datacard.write("----------------------------------------------------------------------------------------------------------------------------------\n")
             datacard.write("bin".ljust(20))
@@ -625,7 +753,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
 
             datacard.write("process".ljust(20))
             for cat in categories:
-                datacard.write(" sig".ljust(15) )
+                datacard.write(" sig2016".ljust(15) )
                 for comp in options.components:
                     datacard.write((" %s" % comp).ljust(15) )
             for cat in sidebands:                
@@ -674,9 +802,9 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             datacard.write("----------------------------------------------------------------------------------------------------------------------------------\n")
             
             # normalization nuisances
-            datacard.write("cms_lumi_13TeV  lnN".ljust(20))
+            datacard.write("cms_lumi_13TeV2016  lnN".ljust(20))
             for cat in categories:
-                datacard.write(" 1.062".ljust(15) )
+                datacard.write(" 1.026".ljust(15) )
                 for comp in options.components:
                     datacard.write(" -".ljust(15) )
             for cat in sidebands:                
@@ -684,10 +812,10 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                     datacard.write(" -".ljust(15) )
             datacard.write("\n")
 
-            datacard.write(("cms_lep_sf_13TeV_mm  lnN").ljust(20))
+            datacard.write(("cms_lep_sf_13TeV2016_mm  lnN").ljust(20))
             for cat in categories:
                 if cat=="mm":
-                  datacard.write(" 1.05".ljust(15) )
+                  datacard.write(" 1.02".ljust(15) )
                 else:
                   datacard.write(" -".ljust(15) )
                 for comp in options.components:
@@ -697,10 +825,10 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                     datacard.write(" -".ljust(15) )
             datacard.write("\n")
 
-            datacard.write(("cms_lep_sf_13TeV_ee  lnN").ljust(20))
+            datacard.write(("cms_lep_sf_13TeV2016_ee  lnN").ljust(20))
             for cat in categories:
                 if cat=="ee":
-                  datacard.write(" 1.05".ljust(15) )
+                  datacard.write(" 1.025".ljust(15) )
                 else:
                   datacard.write(" -".ljust(15) )
                 for comp in options.components:
@@ -710,9 +838,9 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                     datacard.write(" -".ljust(15) )
             datacard.write("\n")
 
-            datacard.write("cms_pho_sf_13TeV  lnN".ljust(20))
+            datacard.write("cms_pho_sf_13TeV2016  lnN".ljust(20))
             for cat in categories:
-                datacard.write(" 1.05".ljust(15) )
+                datacard.write(" 1.015".ljust(15) )
                 for comp in options.components:
                     datacard.write(" -".ljust(15) )
             for cat in sidebands:                
@@ -720,7 +848,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                     datacard.write(" -".ljust(15) )
             datacard.write("\n")
 
-            #datacard.write("cms_xzg_scale_13TeV  lnN".ljust(20))
+            #datacard.write("cms_xzg_scale_13TeV2016  lnN".ljust(20))
             #for cat in categories:
             #    datacard.write(" 1.06".ljust(15) )
             #    for comp in options.components:
@@ -730,9 +858,11 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             #        datacard.write(" -".ljust(15) )
             #datacard.write("\n")
 
-            datacard.write("cms_xzg_pdf_13TeV  lnN".ljust(20))
+            ## KW
+
+            datacard.write("cms_pileup_13TeV2016  lnN".ljust(20))
             for cat in categories:
-                datacard.write(" 1.01".ljust(15) )
+                datacard.write(" 1.01".ljust(15) ) # Original
                 for comp in options.components:
                     datacard.write(" -".ljust(15) )
             for cat in sidebands:                
@@ -740,10 +870,36 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                     datacard.write(" -".ljust(15) )
             datacard.write("\n")
 
-            datacard.write(("cms_trig_13TeV_mm  lnN").ljust(20))
+            ####
+
+
+            ## KW
+            mass_eval = float(options.signals_cb[signame][0])
+            filePDFSyst = ROOT.TFile.Open("pdfSyst_Moriond17.root","READ")
+            f1_pdfScaleSyst = ROOT.TF1(filePDFSyst.Get("fitForWideEE"))
+            unc = 1. + max(0.01,f1_pdfScaleSyst.Eval(mass_eval)) # KW
+            if(options.signal_width == "0p014"):
+                unc = 1.01
+            # unc = 1.01
+            ###
+
+            datacard.write("cms_pdf_13TeV2016  lnN".ljust(20)) # to avoid a conflict with the hadronic channel
+            # datacard.write("cms_xzg_pdf_13TeV2016  lnN".ljust(20)) # Original
+            for cat in categories:
+                # datacard.write(" 1.01".ljust(15) ) # Original
+                uncString = " %f" % unc # KW
+                datacard.write(uncString.ljust(15) ) # KW
+                for comp in options.components:
+                    datacard.write(" -".ljust(15) )
+            for cat in sidebands:                
+                for comp in  fit["sidebands"][cat]:                    
+                    datacard.write(" -".ljust(15) )
+            datacard.write("\n")
+
+            datacard.write(("cms_trig_13TeV2016_mm  lnN").ljust(20))
             for cat in categories:
                 if cat=="mm": 
-                  datacard.write(" 1.04".ljust(15) )
+                  datacard.write(" 1.035".ljust(15) )
                 else:
                   datacard.write(" -".ljust(15) )
                 for comp in options.components:
@@ -753,10 +909,10 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                     datacard.write(" -".ljust(15) )
             datacard.write("\n")
 
-            datacard.write(("cms_trig_13TeV_ee  lnN").ljust(20))
+            datacard.write(("cms_trig_13TeV2016_ee  lnN").ljust(20))
             for cat in categories:
                 if cat=="ee": 
-                  datacard.write(" 1.03".ljust(15) )
+                  datacard.write(" 1.01".ljust(15) )
                 else:
                   datacard.write(" -".ljust(15) )
                 for comp in options.components:
@@ -837,12 +993,12 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
 
             for cat in fit["categories"]:
             
-                model = self.rooPdf("model_%s%s" % (comp,cat))
-                data      = self.rooData("binned_data_%s"% (cat))                 
+                model = self.rooPdf("model_%s%s2016" % (comp,cat))
+                data      = self.rooData("binned_data2016_%s"% (cat))                 
                 model.fitTo(data,RooFit.Strategy(2),*fitops)
                 
-                signal = self.workspace_.pdf("model_signal_%s_%s" % (signame,cat))
-                signal_norm = self.workspace_.function("model_signal_%s_%s_norm" % (signame,cat))
+                signal = self.workspace_.pdf("model_signal_%s_%s2016" % (signame,cat))
+                signal_norm = self.workspace_.function("model_signal_%s_%s2016_norm" % (signame,cat))
                 
                 roobs = self.getObservable(cat)
 
@@ -904,7 +1060,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         bkg = {}
         for cat in fit["categories"]:
             for comp in options.components :
-                bkgPdf = self.rooPdf("model_%s_%s" % (comp,cat))
+                bkgPdf = self.rooPdf("model_%s_%s2016" % (comp,cat))
                 ## retrieve norm of pdf 
                 rooNdata = self.buildRooVar("%s_norm" % (bkgPdf.GetName()),[],recycle=True,importToWs=False)
                 
@@ -923,13 +1079,13 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 rooset = ROOT.RooArgSet(roobs,roowe)
                 self.keep(rooset)
 
-                dataBinned = self.rooData("binned_data_%s" % cat)
-                data = self.rooData("data_%s" % cat)
+                dataBinned = self.rooData("binned_data2016_%s" % cat)
+                data = self.rooData("data2016_%s" % cat)
                 if options.use_signal_datahist:
                     signalDataHist = self.rooData("signal_%s_%s" % (signame,cat))
-                    signalPdf = ROOT.RooHistPdf("signal_model_%s_%s"% (signame,cat),"signalPdf_%s_%s"% (signame,cat),ROOT.RooArgSet(roobs),signalDataHist)
+                    signalPdf = ROOT.RooHistPdf("signal_model_%s_%s2016"% (signame,cat),"signalPdf_%s_%s"% (signame,cat),ROOT.RooArgSet(roobs),signalDataHist)
                 else:
-                    signalPdf = self.rooPdf("model_signal_%s_%s"% (signame,cat))
+                    signalPdf = self.rooPdf("model_signal_%s_%s2016"% (signame,cat))
                 self.workspace_.rooImport(data)
                 self.workspace_.rooImport(dataBinned)
                 
@@ -958,11 +1114,11 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                         self.workspace_.rooImport(rooNdata)
                         continue
                 
-                    bkgPdf.SetName("bkgOnly_model_%s_%s" % (comp,cat) )
+                    bkgPdf.SetName("bkgOnly_model_%s_%s2016" % (comp,cat) )
                     rooNdata.SetName("%s_norm" % bkgPdf.GetName())
                     ## build list of coefficients 
                     roolist = ROOT.RooArgList()
-                    nBias = self.buildRooVar("nBias_%s_%s" % (comp,cat), [], importToWs=False )
+                    nBias = self.buildRooVar("nBias2016_%s_%s" % (comp,cat), [], importToWs=False )
                     nBias.setVal(0.)
                     nBias.setConstant(True)
                     
@@ -990,7 +1146,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                                 fit["sig_params"][signame].append( ("# %s_norm" % nBias.GetName(),  nB/options.fwhm_input_file[signame]["%s_norm" % cat], 0.) )
                             #print "%f" % nB
                     fit["sig_params"][signame].append( (nBias.GetName(), nBias.getVal(), nB) )                    
-                    pdfSum_norm = ROOT.RooFormulaVar("model_%s_%s_norm" % (comp,cat),"model_%s_%s_norm" % (comp,cat),"@0",ROOT.RooArgList(rooNdata)) 
+                    pdfSum_norm = ROOT.RooFormulaVar("model_%s_%s2016_norm" % (comp,cat),"model_%s_%s2016_norm" % (comp,cat),"@0",ROOT.RooArgList(rooNdata)) 
                 
                     fracsignuis = ROOT.RooFormulaVar("signal_%s_%s_nuisanced_frac" % (comp,cat),"signal_%s_%s_nuisanced_frac" % (comp,cat),"@0*1./@1",ROOT.RooArgList(nBias,pdfSum_norm) )
                     fracbkg = ROOT.RooFormulaVar("background_%s_%s_frac" % (comp,cat), "background_%s_%s_frac" % (comp,cat), "1.-@0",ROOT.RooArgList(fracsignuis))
@@ -999,7 +1155,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                     
                     
                     ## summing pdfs
-                    pdfSum = ROOT.RooAddPdf("model_%s_%s" % (comp,cat),"model_%s_%s" % (comp,cat), roopdflist, roolist)
+                    pdfSum = ROOT.RooAddPdf("model_%s_%s2016" % (comp,cat),"model_%s_%s2016" % (comp,cat), roopdflist, roolist)
                     self.workspace_.rooImport(pdfSum_norm)
                     self.workspace_.rooImport(pdfSum,RooFit.RecycleConflictNodes())
                     
@@ -1007,19 +1163,19 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                     ### for nuis,nuisCats in shapeNuis.iteritems():
                     ###     if cat in nuisCats: 
                     ###         for idir in ["Up","Down"]:
-                    ###             ipdf = self.rooPdf("model_signal_%s_%s_%s%s"% (signame,cat,nuis,idir))
+                    ###             ipdf = self.rooPdf("model_signal_%s_%s2016_%s%s"% (signame,cat,nuis,idir))
                     ###             self.workspace_.rooImport(ipdf,RooFit.RecycleConflictNodes())
                                 
             
             # import pdfs for the sidebands
             for cat,comps in fit.get("sidebands",{}).iteritems():
                 for comp in comps:
-                    dataBinned = self.rooData("binned_data_%s" % cat)
-                    data = self.rooData("data_%s" % cat)
+                    dataBinned = self.rooData("binned_data2016_%s" % cat)
+                    data = self.rooData("data2016_%s" % cat)
                     self.workspace_.rooImport(data)
                     self.workspace_.rooImport(dataBinned)
                     
-                    sbPdf = self.rooPdf("model_%s_%s" % (comp,cat))
+                    sbPdf = self.rooPdf("model_%s_%s2016" % (comp,cat))
                     sbNorm  = self.rooVar("%s_norm" % sbPdf.GetName())
                     self.workspace_.rooImport(sbNorm)
                     self.workspace_.rooImport(sbPdf,RooFit.RecycleConflictNodes())
@@ -1044,12 +1200,12 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
 
             for cat in fit["categories"]:
             
-                modelpdf = self.workspace_.pdf("model_%s%s" % (comp,cat))
+                modelpdf = self.workspace_.pdf("model_%s%s2016" % (comp,cat))
                 print modelpdf
                 self.workspace_.saveSnapshot("nominalFit",self.workspace_.allVars())
-                data      = self.workspace_.data("binned_data_%s"% (cat))                 
+                data      = self.workspace_.data("binned_data2016_%s"% (cat))                 
                 obs = self.getObservable(cat)
-                obs.setMax(2500)
+                obs.setMax(2000)
 
                 datapdf = ROOT.RooHistPdf("pdf_%s" % data.GetName(),"pdf_%s" % data.GetName(),ROOT.RooArgSet(obs),data)
 
@@ -1077,6 +1233,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 print "saving"
                 self.keep(canv)
                 self.autosave(True)
+                canv.Print( "%s.pdf" % canv.GetName() ) # KW
 
     ## ------------------------------------------------------------------------------------------------------------  
     def computeKSstat(self,data,model,obs,runToys,nominalSnapshot):
@@ -1088,7 +1245,27 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         
         observed = self.computeKSD(datacdf,modelcdf,obs)
         
-        tmp = self.open("/tmp/musella/pippo.root","recreate")
+        #### KW
+        firstBin = 200
+        lastBin  = 2000
+        firstBinForNorm = int((firstBin - 200)/10.)+1
+        lastBinForNorm  = int((lastBin - 200)/10.)
+        binWidth = 20.
+        nBins = int((lastBin-firstBin)/binWidth)
+
+        # histNorm = model.createHistogram("forNorm", obs, ROOT.RooFit.Binning(330, 200, 2500) )
+        histPDF  = model.createHistogram("pdf",     obs, ROOT.RooFit.Binning(nBins, firstBin, lastBin) )
+        histMC   = data.createHistogram("mc",      obs, ROOT.RooFit.Binning(nBins, firstBin, lastBin) )
+
+        # # print "between %i and %i" % (firstBinForNorm, lastBinForNorm)
+        # histPDF.Scale( (norm.getVal()*histNorm.Integral(firstBinForNorm,lastBinForNorm))/(histPDF.Integral(1,nBins)*histNorm.Integral()) )
+
+        print "KS Prob: ", histPDF.KolmogorovTest(histMC)
+        ####KW
+
+
+        tmp = self.open("/afs/cern.ch/user/k/knam/prova/pippo.root","recreate")
+        # tmp = self.open("/tmp/musella/pippo.root","recreate")
         
         ksdistrib = []
         ndata = data.sumEntries()
@@ -1112,8 +1289,12 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         
         snap = ( model.GetName(), model.getDependents(self.pdfPars_).snapshot() )
         for toy in toys:
-            mymodel = self.buildPdf("dijet",toy.GetName(),obs,load=snap)
-            mymodel.fitTo(toy, RooFit.PrintLevel(-1),RooFit.Warnings(False),RooFit.Minimizer("Minuit2"),RooFit.Offset(True) )
+            # mymodel = model #KW
+            # fitops = [ RooFit.PrintLevel(-1),RooFit.Warnings(False),RooFit.Minimizer("Minuit2"),RooFit.Offset(True) ] #KW
+            # mymodel.fitTo(toy, RooFit.Strategy(2), *fitops) # KW
+            # mymodel.fitTo(toy, RooFit.Strategy(2)) # KW
+            mymodel = self.buildPdf("dijet",toy.GetName(),obs,load=snap) # Original
+            mymodel.fitTo(toy, RooFit.PrintLevel(-1),RooFit.Warnings(False),RooFit.Minimizer("Minuit2"),RooFit.Offset(True) ) # Original
 
             toypdf = ROOT.RooHistPdf("%s_toy_%d" % (model.GetName(), itoy),"%s_toy_%d" % (model.GetName(), itoy),ROOT.RooArgSet(obs),toy)
             toycdf = toypdf.createCdf(ROOT.RooArgSet(obs))
@@ -1177,6 +1358,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             ## roobs = self.buildRooVar(*(self.getVar(options.observable)), recycle=False, importToWs=False)
             ## roobs.setRange("fullRange",roobs.getMin(),roobs.getMax()) 
             roobs = self.getObservable(cat)
+            print("roobs: ",roobs.getMin()," ~ ",roobs.getMax())
             rooset = ROOT.RooArgSet(roobs,roowe)
             roobs.getBinning("fullRange")
             extset = ROOT.RooArgSet(rooset)
@@ -1243,7 +1425,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 dset.addColumn(templfunc)
             reduced = dset.reduce(RooFit.SelectVars(extset),RooFit.Range("fullRange"))
 
-            reduced.SetName("data_%s"% (cat))
+            reduced.SetName("data2016_%s"% (cat))
             
             ## keep track of numbef of events in data
             ndata[cat] = reduced.sumEntries()
@@ -1252,7 +1434,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             
             self.workspace_.rooImport(reduced)
             
-            binned = reduced.binnedClone("binned_data_%s" % cat)
+            binned = reduced.binnedClone("binned_data2016_%s" % cat)
             self.workspace_.rooImport(binned)
 
         fitops = [ RooFit.PrintLevel(-1),RooFit.Warnings(False),RooFit.Minimizer("Minuit2"),RooFit.Offset(True) ]
@@ -1427,16 +1609,16 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                     ## fit pdf to asimov dataset
                     aset = ROOT.RooArgSet(asimobs,roowe)
                     adset = adset.reduce(RooFit.SelectVars(aset),RooFit.Range("asimRange")) 
-                    apdf = self.buildPdf(model,"asimov_model_%s%s" % (comp,cat), asimobs )
+                    apdf = self.buildPdf(model,"asimov_model_%s%s2016" % (comp,cat), asimobs )
                     apdf.fitTo(adset,*fitops)
-                    snap = ("asimov_model_%s%s" % (comp,cat), apdf.getDependents( self.pdfPars_ ).snapshot())                    
+                    snap = ("asimov_model_%s%s2016" % (comp,cat), apdf.getDependents( self.pdfPars_ ).snapshot())                    
                     ## now compute number of expected events in "fullRange"                    
                     ndset = ndset.reduce(RooFit.SelectVars(aset),RooFit.Range("asimRange"))
                     nexp = ndset.sumEntries()
                     nexp *= apdf.createIntegral(ROOT.RooArgSet(asimobs),"fullRange").getVal()/apdf.createIntegral(ROOT.RooArgSet(asimobs),"asimRange").getVal()
                     print "throwing asimov dataset for %1.4g expected events (computed from %1.4g events in enlarged range)" % ( nexp, ndset.sumEntries() )
                     ## build a new pdf which depends on roobs instead of asimobs and use it to throw the asimov dataset
-                    tpdf = self.buildPdf(model,"extra_asimov_model_%s%s" % (comp,cat), roobs, load=snap )
+                    tpdf = self.buildPdf(model,"extra_asimov_model_%s%s2016" % (comp,cat), roobs, load=snap )
                     dset = ROOT.DataSetFiller.throwAsimov(nexp,tpdf,roobs)
                     ndset = dset
                     print
@@ -1475,17 +1657,17 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 if add_sideband: 
                     ## if we want to take background shape from sideband in data, book 
                     ##    the pdf such that coefficients are the same for the signal region and sideband shapes
-                    pdf = self.buildPdf(model,"model_%s_%s_control" % (add_sideband,catsource), roobs, load=snap )
-                    sbpdf = self.buildPdf(model,"model_%s_%s_control" % (add_sideband,catsource), roobs, load=snap )
-                    sbpdf.SetName("model_%s_%s_control" % (add_sideband,catsource))
+                    pdf = self.buildPdf(model,"model_%s_%s2016_control" % (add_sideband,catsource), roobs, load=snap )
+                    sbpdf = self.buildPdf(model,"model_%s_%s2016_control" % (add_sideband,catsource), roobs, load=snap )
+                    sbpdf.SetName("model_%s_%s2016_control" % (add_sideband,catsource))
                     sidebands[catsource].add(add_sideband)
                 else:
                     ## else book fully independet shape
-                    pdf = self.buildPdf(model,"model_%s%s" % (comp,cat), roobs, load=snap )                    
+                    pdf = self.buildPdf(model,"model_%s%s2016" % (comp,cat), roobs, load=snap )                    
                 if options.use_templates:
-                    pdf.SetName("model_%s_%s%s" % (roobs.GetName(),comp,cat))
+                    pdf.SetName("model_%s_%s2016%s" % (roobs.GetName(),comp,cat))
                 else:
-                    pdf.SetName("model_%s%s" % (comp,cat))
+                    pdf.SetName("model_%s%s2016" % (comp,cat))
                     
                 if add_sideband:
                     ## build normalization variable for sideband
@@ -1500,8 +1682,16 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 if not useAsimov:
                     # no need to refit if we used asimov dataset
                     if options.real_data:
-                        pdf.fitTo(binned,RooFit.Strategy(2),*fitops)
+                        print("binned")
+                        pdf.fitTo(binned,RooFit.Strategy(2),*fitops) # Original
+                        # pdf.fitTo(reduced,RooFit.Strategy(2),*fitops) # Test
+                        print "KW"
+                        # roohistForData=self.buildRooDataHist(treename,roovars=ROOT.RooArgSet(roobs)) #KW
+                        # reducedDataHist = roohistForData.reduce(ROOT.RooArgSet(roobs),"%s > %f && %s < %f" % (roobs.GetName(),roobs.getMin(),roobs.GetName(),roobs.getMax())) #KW
+                        # pdf.fitTo(reducedDataHist,RooFit.Strategy(2)) # KW
+                        print "DONE"
                     else:
+                        print("reduced")
                         pdf.fitTo(reduced,RooFit.Strategy(2),*fitops)
                     
                 ## template pdfs
@@ -1522,7 +1712,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                     templset.fillHistogram(templhist, ROOT.RooArgList(roobs,rootempl) )
                     ## make slice pdf out of TH2
                     self.keep(pdf)
-                    templpdf = ROOT.RooSlicePdf("model_%s_%s%s" % (rootempl.GetName(),comp,cat),"model_%s_%s%s" % (rootempl.GetName(),comp,cat),
+                    templpdf = ROOT.RooSlicePdf("model_%s_%s2016%s" % (rootempl.GetName(),comp,cat),"model_%s_%s2016%s" % (rootempl.GetName(),comp,cat),
                                                 templhist,rootempl,roobs,unrol_widths)
                     self.keep(templpdf)
                     if options.verbose:
@@ -1532,7 +1722,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                     ## and finally the conditional pdf. 
                     ## note: not telling RooFit to build the conditional pdf 
                     ##       since it is already done by the RooSlicePdf                        
-                    pdf = ROOT.RooProdPdf("model_%s%s" % (comp,cat), "model_%s%s" % (comp,cat), 
+                    pdf = ROOT.RooProdPdf("model_%s%s2016" % (comp,cat), "model_%s%s2016" % (comp,cat), 
                                           pdf, templpdf )
                                           ## ROOT.RooArgSet(pdf), RooFit.Conditional(ROOT.RooArgSet(templpdf),ROOT.RooArgSet(rootempl)) )
                     if options.verbose:
@@ -1557,15 +1747,21 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 signal_norm=None
                 if options.make_pr_plot:
                     signame = "grav_001_640"
-                    signal = self.rooPdf("model_signal_%s_%s" % (signame,cat))
-                    signal_norm = self.rooFunc("model_signal_%s_%s_norm" % (signame,cat))
+                    signal = self.rooPdf("model_signal_%s_%s2016" % (signame,cat))
+                    signal_norm = self.rooFunc("model_signal_%s_%s2016_norm" % (signame,cat))
                     print signal_norm, signal 
                 #if len(options.plot_blind) == 0:
                 #    options.plot_blind = None
                     
-                self.plotBkgFit(options,plreduced,pdf,roobs,"%s%s" % (comp,cat),poissonErrs=True, plot_binning=options.cat_plot_binning.get(cat,options.plot_binning),
+                # KW (backgroundfit for MC)
+                self.plotBkgFit(options,plreduced,pdf,roobs,"%s%s" % (comp,cat),poissonErrs=False, plot_binning=options.cat_plot_binning.get(cat,options.plot_binning),
                                 blabel=bias_name,signalmodel=signal,signalmodel_norm=signal_norm,blind=options.plot_blind)
-                self.plotBkgFit(options,plreduced,pdf,roobs,"%s%s_lin" % (comp,cat),poissonErrs=True, plot_binning=options.cat_plot_binning.get(cat,options.plot_binning),logy=False,blabel=bias_name,signalmodel=signal,signalmodel_norm=signal_norm,blind=options.plot_blind)
+                # self.plotBkgFit(options,plreduced,pdf,roobs,"%s%s_lin" % (comp,cat),poissonErrs=False, plot_binning=options.cat_plot_binning.get(cat,options.plot_binning),logy=False,blabel=bias_name,signalmodel=signal,signalmodel_norm=signal_norm,blind=options.plot_blind)
+                
+                # Original (backgroundfit for data)
+                # self.plotBkgFit(options,plreduced,pdf,roobs,"%s%s" % (comp,cat),poissonErrs=True, plot_binning=options.cat_plot_binning.get(cat,options.plot_binning),
+                #                 blabel=bias_name,signalmodel=signal,signalmodel_norm=signal_norm,blind=options.plot_blind)
+                # self.plotBkgFit(options,plreduced,pdf,roobs,"%s%s_lin" % (comp,cat),poissonErrs=True, plot_binning=options.cat_plot_binning.get(cat,options.plot_binning),logy=False,blabel=bias_name,signalmodel=signal,signalmodel_norm=signal_norm,blind=options.plot_blind)
                 
                 ## normalization has to be called <pdfname>_norm or combine won't find it
                 if options.norm_as_fractions:
@@ -1607,9 +1803,9 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                     if weight_cut or useAsimov:
                         reduced = uncut
                         binned  = binned_uncut
-                    reduced.SetName("data_%s_control" % catsource)
+                    reduced.SetName("data2016_%s_control" % catsource)
                     self.workspace_.rooImport(reduced)
-                    binned.SetName("binned_data_%s_control" % catsource)
+                    binned.SetName("binned_data2016_%s_control" % catsource)
                     self.workspace_.rooImport(binned)
                     self.workspace_.rooImport(sbnorm)
                     self.workspace_.rooImport(sbpdf,RooFit.RecycleConflictNodes())
@@ -1733,7 +1929,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 roobs.setRange("fullRange",roobs.getMin(),roobs.getMax())
 
                 binned = self.rooData("signal_%s_%s" % (signame,cat)) #ROODATAHIST SIGNAL
-                #signalPdf = ROOT.RooHistPdf("signal_model_%s_%s"% (signame,cat),"signalPdf_%s_%s"% (signame,cat),ROOT.RooArgSet(roobs),signalDataHist)
+                #signalPdf = ROOT.RooHistPdf("signal_model_%s_%s2016"% (signame,cat),"signalPdf_%s_%s"% (signame,cat),ROOT.RooArgSet(roobs),signalDataHist)
                 
                 print "signame: " + signame
                 for comp in options.components :
@@ -1834,8 +2030,12 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
 
         signals = options.signals_cb.keys()
 
-        fileMuSyst = ROOT.TFile.Open("muonSyst.root")
-        f1_muScaleSyst = ROOT.TF1(fileMuSyst.Get("f1_muSyst"))
+        fileMuSyst = ROOT.TFile.Open("muonSyst_Moriond17.root","READ")
+        f1_muScaleSyst = ROOT.TF1(fileMuSyst.Get("fitForNarrow"))
+        fileEgmSyst = ROOT.TFile.Open("egammaSyst_Moriond17.root","READ")
+        f1_egmScaleSyst = ROOT.TF1(fileEgmSyst.Get("fitForWide"))
+        # fileMuSyst = ROOT.TFile.Open("muonSyst_74x.root")
+        # f1_muScaleSyst = ROOT.TF1(fileMuSyst.Get("f1_muSyst"))
 
         fileEff    = ROOT.TFile.Open("signalEfficiency_w"      + options.signal_width + ".root")
         f1_eff_rel_ee = ROOT.TF1(fileEff.Get("f1_frac_ee"))
@@ -1845,19 +2045,19 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
 
         fileShapes = ROOT.TFile.Open("signalShapeParameters_w" + options.signal_width + ".root")
 
-        f_mean_ee    = fileShapes.Get("f1_mean_w"   + options.signal_width + "_ee")
-        f_sigma_ee   = fileShapes.Get("f1_sigma_w"  + options.signal_width + "_ee")
-        f_alpha1_ee  = fileShapes.Get("f1_alpha1_w" + options.signal_width + "_ee")
-        f_n1_ee      = fileShapes.Get("f1_n1_w"     + options.signal_width + "_ee")
-        f_alpha2_ee  = fileShapes.Get("f1_alpha2_w" + options.signal_width + "_ee")
-        f_n2_ee      = fileShapes.Get("f1_n2_w"     + options.signal_width + "_ee")
+        f_mean_ee    = ROOT.TF1(fileShapes.Get("f1_mean_w"   + options.signal_width + "_ee"))
+        f_sigma_ee   = ROOT.TF1(fileShapes.Get("f1_sigma_w"  + options.signal_width + "_ee"))
+        f_alpha1_ee  = ROOT.TF1(fileShapes.Get("f1_alpha1_w" + options.signal_width + "_ee"))
+        f_n1_ee      = ROOT.TF1(fileShapes.Get("f1_n1_w"     + options.signal_width + "_ee"))
+        f_alpha2_ee  = ROOT.TF1(fileShapes.Get("f1_alpha2_w" + options.signal_width + "_ee"))
+        f_n2_ee      = ROOT.TF1(fileShapes.Get("f1_n2_w"     + options.signal_width + "_ee"))
 
-        f_mean_mm    = fileShapes.Get("f1_mean_w"   + options.signal_width + "_mm")
-        f_sigma_mm   = fileShapes.Get("f1_sigma_w"  + options.signal_width + "_mm")
-        f_alpha1_mm  = fileShapes.Get("f1_alpha1_w" + options.signal_width + "_mm")
-        f_n1_mm      = fileShapes.Get("f1_n1_w"     + options.signal_width + "_mm")
-        f_alpha2_mm  = fileShapes.Get("f1_alpha2_w" + options.signal_width + "_mm")
-        f_n2_mm      = fileShapes.Get("f1_n2_w"     + options.signal_width + "_mm")
+        f_mean_mm    = ROOT.TF1(fileShapes.Get("f1_mean_w"   + options.signal_width + "_mm"))
+        f_sigma_mm   = ROOT.TF1(fileShapes.Get("f1_sigma_w"  + options.signal_width + "_mm"))
+        f_alpha1_mm  = ROOT.TF1(fileShapes.Get("f1_alpha1_w" + options.signal_width + "_mm"))
+        f_n1_mm      = ROOT.TF1(fileShapes.Get("f1_n1_w"     + options.signal_width + "_mm"))
+        f_alpha2_mm  = ROOT.TF1(fileShapes.Get("f1_alpha2_w" + options.signal_width + "_mm"))
+        f_n2_mm      = ROOT.TF1(fileShapes.Get("f1_n2_w"     + options.signal_width + "_mm"))
 
         for signame in signals:
             self.bookNewWs()
@@ -1935,12 +2135,16 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                     nuis   = ROOT.RooArgList(ROOT.RooFit.RooConst(1.)) ## here we build 1 + Sum nuis*coeff
                     coeffs = ROOT.RooArgList(ROOT.RooFit.RooConst(1.))
                     for name,coeff in variations.iteritems():
-                        unc = options.energy_scale_uncertainties.get(name,options.energy_scale_uncertainty)
-                        if name=="mu": unc = f1_muScaleSyst.Eval(mass_eval)
+                        unc = options.energy_scale_uncertainties.get(name,options.energy_scale_uncertainty) 
+                        if name=="mu": unc = f1_muScaleSyst.Eval(mass_eval) #0.015 # Original
+                        # if name=="mu": unc = 0.01 # KW
                         if name=="egm":
-                          rooNuis = ROOT.RooRealVar("ggH_hzg_mShift_el_8TeV_cat0", "ggH_hzg_mShift_el_8TeV_cat0", 0., -5.*unc, 5.*unc )
+                          # unc = 0.02 # KW
+                          unc = f1_egmScaleSyst.Eval(mass_eval) # KW
+                          rooNuis = ROOT.RooRealVar("ggH_hzg_mShift_pho_13TeV2016_cat0", "ggH_hzg_mShift_pho_13TeV2016_cat0", 0., -5.*unc, 5.*unc ) # To avoid conflict
+                          # rooNuis = ROOT.RooRealVar("ggH_hzg_mShift_el_8TeV_cat0", "ggH_hzg_mShift_el_8TeV_cat0", 0., -5.*unc, 5.*unc ) # Original
                         else:
-                          rooNuis = ROOT.RooRealVar("energyScale%s" % name, "energyScale%s" % name, 0., -5.*unc, 5.*unc )
+                          rooNuis = ROOT.RooRealVar("energyScale2016%s" % name, "energyScale2016%s" % name, 0., -5.*unc, 5.*unc )
                         allnuis.add( (rooNuis.GetName(),0.,unc) )
                         rooNuis.setConstant(True)
                         rooCoeff = ROOT.RooFit.RooConst(coeff)
@@ -1961,10 +2165,10 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 
                 ## build RooHistPdf in roobs
                 ##pdfDataHist = binned if not options.use_templates else binned.reduce(ROOT.RooArgSet(roobs))
-                #pdf=ROOT.RooHistPdf("model_signal_%s_%s"% (signame, cat),"model_signal_%s_%s"% (signame, cat),ROOT.RooArgSet(roobs),pdfDataHist)
+                #pdf=ROOT.RooHistPdf("model_signal_%s_%s2016"% (signame, cat),"model_signal_%s_%s2016"% (signame, cat),ROOT.RooArgSet(roobs),pdfDataHist)
                 print "++++++++++ Setting up DoubleCB for cat %s with values: %f, %f, %f, %f, %f, %f" % (cat,mu.getVal(),sigma.getVal(),alpha1.getVal(),n1.getVal(),alpha2.getVal(),n2.getVal())
-                pdf=ROOT.RooDoubleCBShape("model_signal_%s_%s"% (signame, cat),"model_signal_%s_%s"% (signame, cat),roobs,mu,sigma,alpha1,n1,alpha2,n2)
-                #pdf=ROOT.RooDoubleCB("model_signal_%s_%s"% (signame, cat),"model_signal_%s_%s"% (signame, cat),roobs,MH,sigmaH,alpha1,n1,alpha2,n2)
+                pdf=ROOT.RooDoubleCBShape("model_signal_%s_%s2016"% (signame, cat),"model_signal_%s_%s2016"% (signame, cat),roobs,mu,sigma,alpha1,n1,alpha2,n2)
+                #pdf=ROOT.RooDoubleCB("model_signal_%s_%s2016"% (signame, cat),"model_signal_%s_%s2016"% (signame, cat),roobs,MH,sigmaH,alpha1,n1,alpha2,n2)
 
                 if options.verbose:
                     print "Integral signal pdf    :", pdf.createIntegral(ROOT.RooArgSet(roobs),"templateBinning%s"%cat).getVal()
@@ -2143,8 +2347,8 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 
                 ## build RooHistPdf in roobs
                 ##pdfDataHist = binned if not options.use_templates else binned.reduce(ROOT.RooArgSet(roobs))
-                #pdf=ROOT.RooHistPdf("model_signal_%s_%s"% (signame, cat),"model_signal_%s_%s"% (signame, cat),ROOT.RooArgSet(roobs),pdfDataHist)
-                pdf=ROOT.RooGaussian("model_signal_%s_%s"% (signame, cat),"model_signal_%s_%s"% (signame, cat),roobs,MH,sigmaH)
+                #pdf=ROOT.RooHistPdf("model_signal_%s_%s2016"% (signame, cat),"model_signal_%s_%s2016"% (signame, cat),ROOT.RooArgSet(roobs),pdfDataHist)
+                pdf=ROOT.RooGaussian("model_signal_%s_%s2016"% (signame, cat),"model_signal_%s_%s2016"% (signame, cat),roobs,MH,sigmaH)
 
                 if options.verbose:
                     print "Integral signal pdf    :", pdf.createIntegral(ROOT.RooArgSet(roobs),"templateBinning%s"%cat).getVal()
@@ -2318,8 +2522,8 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 ### dsetReso.Print()
                 ### binnedReso = dsetReso.binnedClone()
                 ### binnedReso.Print()
-                ### resoPdf=ROOT.RooHistPdf("resolution_model_%s_%s"% (signame, cat),"resolution_model_%s_%s"% (signame, cat),ROOT.RooArgList(roodeltaReco),ROOT.RooArgList(deltaM),binnedReso)
-                ### genPdf=ROOT.RooHistPdf("gen_model_%s_%s"% (signame, cat),"gen_model_%s_%s"% (signame, cat),ROOT.RooArgList(roodeltaGen),ROOT.RooArgList(deltaM),binnedReso)
+                ### resoPdf=ROOT.RooHistPdf("resolution_model_%s_%s2016"% (signame, cat),"resolution_model_%s_%s2016"% (signame, cat),ROOT.RooArgList(roodeltaReco),ROOT.RooArgList(deltaM),binnedReso)
+                ### genPdf=ROOT.RooHistPdf("gen_model_%s_%s2016"% (signame, cat),"gen_model_%s_%s2016"% (signame, cat),ROOT.RooArgList(roodeltaGen),ROOT.RooArgList(deltaM),binnedReso)
                 ### self.keep( [dsetReso,binnedReso] )
                 ### 
                 ### canv = ROOT.TCanvas("resolution_%s_%s" % (signame, cat))
@@ -2413,7 +2617,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 ## build RooHistPdf in roobs
                 ##pdfDataHist = binned if not options.use_templates else binned.reduce(ROOT.RooArgSet(roobs))
                 pdfDataHist = binnedPdf
-                pdf=ROOT.RooHistPdf("model_signal_%s_%s"% (signame, cat),"model_signal_%s_%s"% (signame, cat),ROOT.RooArgSet(roobs),pdfDataHist)
+                pdf=ROOT.RooHistPdf("model_signal_%s_%s2016"% (signame, cat),"model_signal_%s_%s2016"% (signame, cat),ROOT.RooArgSet(roobs),pdfDataHist)
                 if options.verbose:
                     print "Integral signal pdf    :", pdf.createIntegral(ROOT.RooArgSet(roobs),"templateBinning%s"%cat).getVal()
                 print "Integral signal pdf    :", pdf.createIntegral(ROOT.RooArgSet(roobs),"templateBinning%s"%cat).getVal()
@@ -2441,10 +2645,10 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 ## prepare semi-parametric model if neded
                 if options.use_templates:
                     pdf = self.addTemplateToSignal(pdf,signame,cat,roobs,rootempl)
-                    ## pdf.SetName("model_signal_%s_%s_%s"% (roobs.GetName(),signame, cat))
-                    ## ppPdf=self.rooPdf( "model_%s_%s_%s" %(rootempl.GetName(),options.template_comp_sig,cat))
+                    ## pdf.SetName("model_signal_%s_%s2016_%s"% (roobs.GetName(),signame, cat))
+                    ## ppPdf=self.rooPdf( "model_%s_%s2016_%s" %(rootempl.GetName(),options.template_comp_sig,cat))
                     ## self.keep([pdf,ppPdf])
-                    ## pdf = ROOT.RooProdPdf("model_signal_%s_%s"% (signame, cat), "model_signal_%s_%s"% (signame, cat),pdf, ppPdf )
+                    ## pdf = ROOT.RooProdPdf("model_signal_%s_%s2016"% (signame, cat), "model_signal_%s_%s2016"% (signame, cat),pdf, ppPdf )
                     ## if options.verbose:
                     ##     print
                     ##     ppPdf.Print()
@@ -2486,10 +2690,10 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
 
     ## ------------------------------------------------------------------------------------------------------------
     def addTemplateToSignal(self,pdf,signame,cat,roobs,rootempl):
-        pdf.SetName("model_signal_%s_%s_%s"% (roobs.GetName(),signame, cat))
-        ppPdf=self.rooPdf( "model_%s_%s_%s" %(rootempl.GetName(),options.template_comp_sig,cat))
+        pdf.SetName("model_signal_%s_%s2016_%s"% (roobs.GetName(),signame, cat))
+        ppPdf=self.rooPdf( "model_%s_%s2016_%s" %(rootempl.GetName(),options.template_comp_sig,cat))
         self.keep([pdf,ppPdf])
-        pdf = ROOT.RooProdPdf("model_signal_%s_%s"% (signame, cat), "model_signal_%s_%s"% (signame, cat),pdf, ppPdf )
+        pdf = ROOT.RooProdPdf("model_signal_%s_%s2016"% (signame, cat), "model_signal_%s_%s2016"% (signame, cat),pdf, ppPdf )
         if options.verbose:
             print
             ppPdf.Print()
@@ -2726,11 +2930,11 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                     ## FIXME
                     xsection = 1. * rescaleFunc.Eval(float(mass)) * float(options.luminosity)
                     
-                    norm = ROOT.RooProduct("model_signal_%s_%s_norm" % (signame,cat), "model_signal_%s_%s_norm" % (signame,cat), 
+                    norm = ROOT.RooProduct("model_signal_%s_%s2016_norm" % (signame,cat), "model_signal_%s_%s2016_norm" % (signame,cat), 
                                            ROOT.RooArgList(RooFit.RooConst(xsection),exAs[cat]) )
                     sublist_fwhm["%s_norm" % cat] = norm.getVal()
                     pdf = custom.build(True)
-                    pdf.SetName("model_signal_%s_%s" % (signame,cat))
+                    pdf.SetName("model_signal_%s_%s2016" % (signame,cat))
                     dataHistPdf = pdf.generateBinned(ROOT.RooArgSet(obsCat),1000.,True)
                     dataHistPdf.SetName("%s_dataSet" % (pdf.GetName()) )
                     pdf = ROOT.RooHistPdf("%s" % (pdf.GetName()),"%s" % (pdf.GetName()),ROOT.RooArgSet(obsCat),dataHistPdf)
@@ -2942,12 +3146,134 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         print "Plotting dataset"
         dset.plotOn(frame,*(dataopts+invisible))
         print "Plotting pdf....",
+        # obs.setRange("forComparison1TeV",1000,1100) 
+        # obs.setRange("forComparison4TeV",4000,4100) 
+        # around1TeV = pdf.createIntegral(ROOT.RooArgSet(obs),"forComparison1TeV") ## KW
+        # around4TeV = pdf.createIntegral(ROOT.RooArgSet(obs),"forComparison4TeV") ## KW
+        # print around1TeV.getVal(), around4TeV.getVal()
+        # pdfHist = pdf.createHistogram("pdfHist", obs, RooFit.Binning(binning))
+        # binNum1TeV = int( (1000.-240.)/20. + 1 )
+        # binNum3TeV = int( (3000.-240.)/20. + 1 )
+        # print pdfHist.GetBinContent(1), pdfHist.GetBinContent(2)
         pdf.plotOn(frame,*(curveopts+invisible))
+
+        ### KW
+        chi2ndf = frame.chiSquare()
+        fileShapes_w0p014 = ROOT.TFile.Open("signalShapeParameters_w0p014.root")
+        fileShapes_w5p6   = ROOT.TFile.Open("signalShapeParameters_w5p6.root")
+
+        channel = ""
+        if channel.find("ee") != -1:
+            channel = "ee"
+        else:
+            channel = "mm" 
+
+        f_mean_w0p014    = ROOT.TF1(fileShapes_w0p014.Get("f1_mean_w0p014_"+channel))
+        f_sigma_w0p014   = ROOT.TF1(fileShapes_w0p014.Get("f1_sigma_w0p014_"+channel))
+        f_alpha1_w0p014  = ROOT.TF1(fileShapes_w0p014.Get("f1_alpha1_w0p014_"+channel))
+        f_n1_w0p014      = ROOT.TF1(fileShapes_w0p014.Get("f1_n1_w0p014_"+channel))
+        f_alpha2_w0p014  = ROOT.TF1(fileShapes_w0p014.Get("f1_alpha2_w0p014_"+channel))
+        f_n2_w0p014      = ROOT.TF1(fileShapes_w0p014.Get("f1_n2_w0p014_"+channel))
+
+        f_mean_w5p6    = ROOT.TF1(fileShapes_w5p6.Get("f1_mean_w5p6_"+channel))
+        f_sigma_w5p6   = ROOT.TF1(fileShapes_w5p6.Get("f1_sigma_w5p6_"+channel))
+        f_alpha1_w5p6  = ROOT.TF1(fileShapes_w5p6.Get("f1_alpha1_w5p6_"+channel))
+        f_n1_w5p6      = ROOT.TF1(fileShapes_w5p6.Get("f1_n1_w5p6_"+channel))
+        f_alpha2_w5p6  = ROOT.TF1(fileShapes_w5p6.Get("f1_alpha2_w5p6_"+channel))
+        f_n2_w5p6      = ROOT.TF1(fileShapes_w5p6.Get("f1_n2_w5p6_"+channel))
+
+        val_w0p014_mean   = f_mean_w0p014  .Eval(500)
+        val_w0p014_sigma  = f_sigma_w0p014 .Eval(500)
+        val_w0p014_alpha1 = f_alpha1_w0p014.Eval(500)
+        val_w0p014_n1     = f_n1_w0p014    .Eval(500)
+        val_w0p014_alpha2 = f_alpha2_w0p014.Eval(500)
+        val_w0p014_n2     = f_n2_w0p014    .Eval(500)
+
+        mu_w0p014     = self.buildRooVar( "mu_w0p014"    , [val_w0p014_mean]  , importToWs=False)
+        sigma_w0p014  = self.buildRooVar( "sigma_w0p014" , [val_w0p014_sigma] , importToWs=False)
+        alpha1_w0p014 = self.buildRooVar( "alpha1_w0p014", [val_w0p014_alpha1], importToWs=False)
+        n1_w0p014     = self.buildRooVar( "n1_w0p014"    , [val_w0p014_n1]    , importToWs=False)
+        alpha2_w0p014 = self.buildRooVar( "alpha2_w0p014", [val_w0p014_alpha2], importToWs=False)
+        n2_w0p014     = self.buildRooVar( "n2_w0p014"    , [val_w0p014_n2]    , importToWs=False)
+
+        val_w5p6_mean   = f_mean_w5p6  .Eval(2000)
+        val_w5p6_sigma  = f_sigma_w5p6 .Eval(2000)
+        val_w5p6_alpha1 = f_alpha1_w5p6.Eval(2000)
+        val_w5p6_n1     = f_n1_w5p6    .Eval(2000)
+        val_w5p6_alpha2 = f_alpha2_w5p6.Eval(2000)
+        val_w5p6_n2     = f_n2_w5p6    .Eval(2000)
+
+        mu_w5p6     = self.buildRooVar( "mu_w5p6"    , [val_w5p6_mean]  , importToWs=False)
+        sigma_w5p6  = self.buildRooVar( "sigma_w5p6" , [val_w5p6_sigma] , importToWs=False)
+        alpha1_w5p6 = self.buildRooVar( "alpha1_w5p6", [val_w5p6_alpha1], importToWs=False)
+        n1_w5p6     = self.buildRooVar( "n1_w5p6"    , [val_w5p6_n1]    , importToWs=False)
+        alpha2_w5p6 = self.buildRooVar( "alpha2_w5p6", [val_w5p6_alpha2], importToWs=False)
+        n2_w5p6     = self.buildRooVar( "n2_w5p6"    , [val_w5p6_n2]    , importToWs=False)
+
+        pdf_w0p014=ROOT.RooDoubleCBShape("nominalShape_w0p014","nominalShape_w0p014",obs,mu_w0p014,sigma_w0p014,alpha1_w0p014,n1_w0p014,alpha2_w0p014,n2_w0p014)
+        pdf_w5p6=ROOT.RooDoubleCBShape("nominalShape_w5p6","nominalShape_w5p6",obs,mu_w5p6,sigma_w5p6,alpha1_w5p6,n1_w5p6,alpha2_w5p6,n2_w5p6)
+
+        # pdf_w0p014.plotOn(frame,RooFit.LineColor(8),RooFit.Normalization(2,ROOT.RooAbsReal.NumEvent)) # KW
+        # pdf_w5p6.plotOn(frame,RooFit.LineColor(9),RooFit.Normalization(10,ROOT.RooAbsReal.NumEvent)) # KW
+
+        binnedData = dset.binnedClone()
+        # minMass = 200
+        # maxMass = 2500
+        numberBins = 115
+        if channel == "ee":
+        #     minMass = 240
+        #     maxMass = 2500
+            numberBins = 113
+
+        # firstBinForNorm = 1
+        # lastBinForNorm  = int((maxMass - minMass)/20.)
+
+        histData = binnedData.createHistogram("histData",obs,RooFit.Binning(binning))
+        histBkgFit = pdf.createHistogram("histBkgFit",obs,RooFit.Binning(binning))
+        # histNorm   = pdf.createHistogram("histNorm", obs, ROOT.RooFit.Binning(binning) )
+        if channel == "ee":
+            numberBins = numberBins - 25
+
+        chi2 = 0.
+        ndof = 0
+
+        for idx in range(numberBins):
+            nData  = histData.GetBinContent(idx+1)
+            nBkgFit = histBkgFit.GetBinContent(idx+1)
+            errorData  = histData.GetBinError(idx+1)
+
+            if nData != 0:
+                chi2 = ( (nData - nBkgFit)**2 ) / nData
+                ndof += 1
+
+        # chi2ndf = chi2 / (ndof-1)
+
+        # histBkgFit.Scale( histNorm.Integral(firstBinForNorm,lastBinForNorm)/histBkgFit.Integral(1,numberBins) )
+
+        # chi2ndf = histData.Chi2Test(histBkgFit,"UW CHI2/NDF")
+        ###
 
         ## pdf.Print()
         ## dset.Print()
-        hist   = frame.getObject(int(frame.numItems()-2))
-        fitc   = frame.getObject(int(frame.numItems()-1))
+        hist   = frame.getObject(int(frame.numItems()-2)) # Original
+        fitc   = frame.getObject(int(frame.numItems()-1)) # Original
+        # hist   = frame.getObject(int(frame.numItems()-4)) # KW
+        # fitc   = frame.getObject(int(frame.numItems()-3)) # KW
+        # narrow = frame.getObject(int(frame.numItems()-2)) # KW
+        # wide   = frame.getObject(int(frame.numItems()-1)) # KW
+
+        xPoint, yPoint = ROOT.Double(0.), ROOT.Double(0.)
+        nPoint = 0
+        while nPoint < 10000:
+            fitc.GetPoint(nPoint,xPoint,yPoint) 
+            nPoint += 1
+            print "1 TeV(",xPoint,"):",yPoint
+            if xPoint > 1000 and xPoint < 1001:
+                print "1 TeV(",xPoint,"):",yPoint
+            elif xPoint > 4000 and xPoint < 4001:
+                print "4 TeV(",xPoint,"):",yPoint
+                break
+
         if poissonErrs:
             alpha = (1. - 0.6827)*0.5
             for ip in range(hist.GetN()):
@@ -2981,15 +3307,15 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             #pdf.plotOn(frame, *curveopts)
             dset.plotOn(frame,*dataopts+invisible)
  
-            hist2   = frame.getObject(int(frame.numItems()-1))
+            hist2   = frame.getObject(int(frame.numItems()-1)) 
             if poissonErrs:
                 alpha = (1. - 0.6827)*0.5
                 for ip in range(hist2.GetN()):
                     #nev = hist.GetY()[ip]
-                    if blind and hist2.GetX()[ip]-hist2.GetErrorXlow(ip)>blind[0] and hist2.GetX()[ip]+hist2.GetErrorXhigh(ip)<blind[1]:
+                    if blind and hist2.GetX()[ip]-hist2.GetErrorXlow(ip)>=blind[0] and hist2.GetX()[ip]+hist2.GetErrorXhigh(ip)<blind[1]:
                         hist2.SetPoint(ip,hist2.GetX()[ip],0.)
-                        ## hist2.SetPointEYlow(ip,0.)
-                        ## hist2.SetPointEYhigh(ip,0.)
+                        hist2.SetPointEYlow(ip,0.) # Nam
+                        hist2.SetPointEYhigh(ip,0.) # Nam
                         nev = fitc.Eval(hist2.GetX()[ip])
                         ## continue
                     else:
@@ -2999,7 +3325,8 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                     hist2.SetPointEYlow(ip,el)
                     hist2.SetPointEYhigh(ip,eu)
                     
-            fitcLeg   = frame.getObject(int(frame.numItems()-2))
+            # fitcLeg   = frame.getObject(int(frame.numItems()-4)) # KW
+            fitcLeg   = frame.getObject(int(frame.numItems()-2)) # Original
             histLeg   = frame.getObject(int(frame.numItems()-1))
             
             ronesigma = onesigma.Clone()
@@ -3017,24 +3344,27 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 terrp, terrm = rtwosigma.GetErrorYhigh(ip), rtwosigma.GetErrorYlow(ip)
                 herrp, herrm = hist.GetErrorYhigh(ip), hist.GetErrorYlow(ip)
                 ## print oerrp, oerrm, herrp, herrm
-                if blind and ronesigma.GetX()[ip]-ronesigma.GetErrorXlow(ip)>blind[0] and ronesigma.GetX()[ip]+ronesigma.GetErrorXhigh(ip)<blind[1]:
+                if blind and ronesigma.GetX()[ip]-ronesigma.GetErrorXlow(ip)>=blind[0] and ronesigma.GetX()[ip]+ronesigma.GetErrorXhigh(ip)<blind[1]:
                     ronesigma.SetPoint(ip,ronesigma.GetX()[ip],0.)
                     rtwosigma.SetPoint(ip,rtwosigma.GetX()[ip],0.)
-                if py > hy:
-                    if herrm == 0.: continue
-                    oerrp /= herrm
-                    terrp /= herrm
-                    oerrm /= herrm
-                    terrm /= herrm
+                    ronesigma.SetPointEYhigh(ip,0),ronesigma.SetPointEYlow(ip,0)
+                    rtwosigma.SetPointEYhigh(ip,0),rtwosigma.SetPointEYlow(ip,0)
                 else:
-                    if herrp == 0.: continue
-                    oerrp /= herrp
-                    terrp /= herrp
-                    oerrm /= herrp
-                    terrm /= herrp
-                ## print oerrp, oerrm, herrp, herrm
-                ronesigma.SetPointEYhigh(ip,oerrp),ronesigma.SetPointEYlow(ip,oerrm)
-                rtwosigma.SetPointEYhigh(ip,terrp),rtwosigma.SetPointEYlow(ip,terrm)
+                    if py > hy:
+                        if herrm == 0.: continue
+                        oerrp /= herrm
+                        terrp /= herrm
+                        oerrm /= herrm
+                        terrm /= herrm
+                    else:
+                        if herrp == 0.: continue
+                        oerrp /= herrp
+                        terrp /= herrp
+                        oerrm /= herrp
+                        terrm /= herrp
+                    ## print oerrp, oerrm, herrp, herrm
+                    ronesigma.SetPointEYhigh(ip,oerrp),ronesigma.SetPointEYlow(ip,oerrm)
+                    rtwosigma.SetPointEYhigh(ip,terrp),rtwosigma.SetPointEYlow(ip,terrm)
                 
             #resid.addObject(rtwosigma,"E2")
             resid.addObject(ronesigma,"E2")
@@ -3048,7 +3378,8 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         hresid = frame.residHist(hist.GetName(),fitc.GetName(),True)
         for ip in range(hresid.GetN()):
             if blind and hresid.GetX()[ip]-hresid.GetErrorXlow(ip)>blind[0] and hresid.GetX()[ip]+hresid.GetErrorXhigh(ip)<blind[1]:
-                hresid.SetPoint(ip,hresid.GetX()[ip],0.)
+                hresid.SetPoint(ip,hresid.GetX()[ip],-999)
+                hresid.SetPointEYhigh(ip,0.),hresid.SetPointEYlow(ip,0.)
         
         resid.addPlotable(hresid,"PE")
         
@@ -3062,6 +3393,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         else:
             canv = ROOT.TCanvas("bkg_fit_%s" % label, "bkg_fit_%s" % label,550,600)
             if logy:
+                # legend = ROOT.TLegend(0.45,0.55,0.9,0.95)
                 legend = ROOT.TLegend(0.65,0.55,0.9,0.9)
                 #legend = ROOT.TLegend(0.17,0.11,0.5,0.5)
             else:
@@ -3107,6 +3439,9 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             #ymin = max(1.1e-4,ymin)
             ymin = max(1.1e-1,ymin)
         
+        ymin = 0.11 # KW
+        # ymin = 1e-6# KW
+
         ### frame.GetXaxis().SetLimits(200,20000)
         ###frame.GetXaxis().SetRangeUser(200,1000.1)
         ### resid.GetXaxis().SetLimits(200,2000)
@@ -3124,15 +3459,29 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         #frame.GetXaxis().SetNdivisions(1006, False)
         #if not logy:
         #    frame.GetYaxis().SetNdivisions(505)
+        # pdf.paramOn(frame) ## KW
         frame.Draw()
         hist.SetMarkerStyle(20)
         hist.SetMarkerSize(1.)
         fitc.Draw("same")
         hist.Draw("psame")
+
+        ## KW
+        label_chi2ndf = ROOT.TPaveText(0.45,0.4,0.9,0.55, "brNDC")
+        label_chi2ndf.SetBorderSize(0)
+        label_chi2ndf.SetFillColor(ROOT.kWhite)
+        label_chi2ndf.SetTextSize(0.038)
+        label_chi2ndf.SetTextAlign(31)
+        label_chi2ndf.SetTextFont(42)
+        label_chi2ndf.AddText( "#chi^{2} / ndf = "+"{0:0.2f}".format(chi2ndf) )
+        label_chi2ndf.Draw("same")
+        ##
+
         if legend:
             legend.SetFillColor(ROOT.kWhite)
             legend.SetFillStyle(0)
-            legend.SetTextSize(0.07)
+            # legend.SetTextSize(0.07) # Original
+            legend.SetTextSize(0.06) # KW
             legend.SetTextFont(42)
             legend.SetShadowColor(ROOT.kWhite)
             ## legend.AddEntry(None,"%s category" % label.split("_")[-1],"")
@@ -3146,7 +3495,8 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
             if signalmodel:
                 legend.AddEntry(signalmodel,"#scale[0.9]{G(#scale[0.7]{#tilde{#kappa}=0.01})#rightarrow#gamma#gamma #times 2#upoint10^{-2}}","l")
                 ## legend.AddEntry(None,"   (#tilde{#kappa}=0.01)","")
-                 
+            # legend.AddEntry(narrow,"Signal (500 GeV, 0.014%)","l") # KW
+            # legend.AddEntry(wide,"Signal (2000 GeV, 5.6%)","l") # KW
                 
             legend.Draw("same")
             self.keep(legend)
@@ -3198,7 +3548,8 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         ## resid.GetYaxis().SetTitle("(data - model) / #sigma_{data}")
         ## resid.GetYaxis().SetTitle("(data-fit)/#sigma_{data}")
         resid.GetYaxis().SetTitle("(data-fit)/#sigma_{stat}")
-        resid.GetYaxis().SetRangeUser( -2.5, 2.5 )
+        # resid.GetYaxis().SetRangeUser( -2.5, 2.5 )
+        resid.GetYaxis().SetRangeUser( -5, 5 )
         resid.Draw()
 
         canv.cd(1)
@@ -3354,10 +3705,12 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
                 minim.setErrorLevel(2.)
                 minim.migrad()
                 minim.minos(ROOT.RooArgSet(nlim))
-                errm, errp = -nlim.getErrorLo(),nlim.getErrorHi()
+                errm, errp = -nlim.getErrorLo(),nlim.getErrorHi() # original
+                # errm = max([-nlim.getErrorLo(),nlim.getErrorHi()]) # for stable 1 sigma
             else:
                 result = minim.lastMinuitFit()
-                errm = 2.*nlim.getError()
+                # errm = 2.*nlim.getError() # original
+                errm = nlim.getError() # KW for 1sigma
                 errp = errm
                 
             twosigma.SetPointError(ibin,center-lowedge,upedge-center,errm,errp)
@@ -3393,6 +3746,7 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
 
         roobs = self.buildRooVar(*odef, recycle=False, importToWs=False)
         roobs.setRange("fullRange",roobs.getMin(),roobs.getMax()) 
+        print("fullRange:",roobs.getMin(),"~",roobs.getMax())
         self.observables_[cat] = roobs
         return roobs
 
@@ -3412,9 +3766,15 @@ kmax * number of nuisance parameters (source of systematic uncertainties)
         if not label:
             label = model
         if model == "dijet":                
-            pname = "dijet_%s" % name
-            linc = self.buildRooVar("%s_lin" % pname,[-200.0,200.0], importToWs=False)
-            logc = self.buildRooVar("%s_log" % pname,[-200.0,200.0], importToWs=False)
+            pname = "dijet2016_%s" % name
+            linc = self.buildRooVar("%s_lin" % pname,[-200.0,200.0], importToWs=False) # Original
+            logc = self.buildRooVar("%s_log" % pname,[-200.0,200.0], importToWs=False) # Original
+            # linc = self.buildRooVar("%s_lin" % pname,[-10.0,10.0], importToWs=False) # KW
+            # logc = self.buildRooVar("%s_log" % pname,[-2.0,2.0], importToWs=False) # KW
+            # linc = self.buildRooVar("%s_lin" % pname,[-50.0,50.0], importToWs=False) # KW
+            # logc = self.buildRooVar("%s_log" % pname,[-10.0,10.0], importToWs=False) # KW
+            # linc = self.buildRooVar("%s_lin" % pname,[-50.0,50.0], importToWs=False) # KW
+            # logc = self.buildRooVar("%s_log" % pname,[-10.0,10.0], importToWs=False) # KW
             linc.setVal(5.)
             logc.setVal(-1.)
             
